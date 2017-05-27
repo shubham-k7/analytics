@@ -5,10 +5,10 @@ import { AuthGuard } from './shared';
 const routes: Routes = [
     {
         path: '',
-        loadChildren: './layout/layout.module#LayoutModule',
-        canActivate: [AuthGuard]
+        loadChildren: './login/login.module#LoginModule', canDeactivate: [AuthGuard]
+        
     },
-    { path: 'login', loadChildren: './login/login.module#LoginModule' },
+    { path: '', loadChildren: './layout/layout.module#LayoutModule', canActivate: [AuthGuard] },
     { path: 'signup', loadChildren: './signup/signup.module#SignupModule' },
     { path: 'not-found', loadChildren: './not-found/not-found.module#NotFoundModule' },
     { path: '**', redirectTo: 'not-found' }

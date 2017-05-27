@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import { AuthenticationService } from '../../guard/authentication.service';
 
 @Component({
     selector: 'app-header',
@@ -8,7 +10,8 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class HeaderComponent implements OnInit {
 
-    constructor(private translate: TranslateService) { }
+    constructor(public router: Router,private translate: TranslateService,
+                private authenticationService: AuthenticationService) { }
 
     ngOnInit() {}
 
@@ -22,8 +25,9 @@ export class HeaderComponent implements OnInit {
         dom.classList.toggle('rtl');
     }
 
-    onLoggedout() {
-        localStorage.removeItem('isLoggedin');
+    logout() {
+        this.authenticationService.logout();
+        // this.router.navigate(['']);
     }
 
     changeLang(language: string) {

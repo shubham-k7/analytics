@@ -2,21 +2,29 @@
     <div class="row">
         <div class="col-md-4 push-md-4">
             <img src="assets/images/logo.png" width="150px" class="user-avatar" />
-            <h1>SB Admin BS4 Angular4</h1>
-            <form role="form">
+            <h1>Zast</h1>
+            <form name="loginForm" role="form" novalidate>
                 <div class="form-content">
                     <div class="form-group">
-                        <input type="text" ng-model="name" class="form-control input-underline input-lg" id="" placeholder="Email">
+                        <input type="text" [(ngModel)]="model.username" name="username" #username="ngModel" class="form-control input-underline input-lg" id="" placeholder="Username" required >
                     </div>
 
                     <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password">
+                        <input type="password" [(ngModel)]="model.password" name="password" #password="ngModel" class="form-control input-underline input-lg" id="" placeholder="Password" required >
                     </div>
                 </div>
-                <a class="btn rounded-btn" [routerLink]="['/dashboard']" (click)="onLoggedin()"> Log in </a>
+                <a [class.disabled]="!model.username || !model.password" class="btn rounded-btn" (click)="login()"> Log in </a>
                 &nbsp;
-                <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>
+                <!--<a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>-->
+                <br><br><br><div *ngIf="error" class="alert alert-danger">
+    <strong>{{error}}</strong> Try Again!</div>
+                
+                <!--<div *ngIf="error" >{{ error }}</div>-->
             </form>
         </div>
+<!--<div *ngIf="model.username || model.password">
+    {{ model.username + ":" + model.password }}
+    <!--[class.disabled]="!model.username || !model.password"-->
+<!--</div>-->
     </div>
 </div>
