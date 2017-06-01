@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
                         console.log("Not valid authentication");
                         this.error="Invalid Credentials";
                         // console.log(this.error) 
-                 }
+                    }
                 },
                  (err) => {
                     this.error="Invalid Credentials.";
