@@ -8,7 +8,8 @@
             <div class="card-block">
                 <!--<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                 </canvas>-->
-                <chart [options]="options" (load)="saveInstance($event.context)"></chart>
+                <!--<chart [options]="options" (load)="saveInstance($event.context)"></chart>-->
+            <chart [options]="options" (drilldown)="onChartSelection($event)"></chart>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
@@ -17,12 +18,6 @@
     </div>
 </div>
 
-<div class="card-block">
-                <!--<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>-->
-                <!--<chart [options]="options" (load)="saveInstance($event.context)"></chart>-->
-<chart [options]="options" (drilldown)="onChartSelection($event)"></chart>
-            </div>
 
 <!--<div class="row">-->
 
