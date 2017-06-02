@@ -21,7 +21,7 @@ export class AuthenticationService {
         return this.http.post('http://zastapi.prtouch.com/api/authentication/token/', JSON.stringify({ username: username, password: password }),options)//,new RequestOptions({headers: new Headers()}))
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
-                console.log('----', response.status);
+                // console.log('----', response.status);
                 // let token = response.json() && response.json()['data']['auth_key'];
             //    if(response.json())
                
@@ -29,7 +29,7 @@ export class AuthenticationService {
                 {
                     let token = response.json()['data']['auth_key'];
                     this.token = token;
- 
+                    // console.log(response.json()['data']);
                     // store username and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify({ data: response.json()['data'], token: token }));
                     // return true to indicate successful login

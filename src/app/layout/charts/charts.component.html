@@ -9,7 +9,19 @@
                 <!--<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                 </canvas>-->
                 <!--<chart [options]="options" (load)="saveInstance($event.context)"></chart>-->
-            <chart [options]="options" (drilldown)="onChartSelection($event)"></chart>
+            <chart [options]="options1" id="c1" (drilldown)="onChartSelection($event)"></chart>
+
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header">
+                Chart 2
+            </div>
+            <div class="card-block">
+                <chart [options]="options1" id="c2" (drilldown)="onChartSelection($event)"></chart>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
@@ -17,7 +29,6 @@
         </div>
     </div>
 </div>
-
 
 <!--<div class="row">-->
 

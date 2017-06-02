@@ -9,11 +9,16 @@ import { AuthenticationService } from '../../guard/authentication.service';
     styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
+    user: any;
+    first_name: String;
     constructor(public router: Router,private translate: TranslateService,
                 private authenticationService: AuthenticationService) { }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.user = localStorage.getItem('currentUser');
+        var obj = JSON.parse(this.user);
+        this.first_name = obj["data"]["first_name"];
+    }
 
     toggleSidebar() {
         const dom: any = document.querySelector('body');
