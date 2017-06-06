@@ -43,8 +43,6 @@ export class ChartsComponent implements OnInit {
                     this.charts[0].addSeriesAsDrilldown(arg,series);
                 }
                 // console.log(this.charts[0].addSeries(series));
-                // this.createChart()
-                // chart.set(chartOptions,true);
     },
             (err) => {
                 console.log("ERROR occured");
