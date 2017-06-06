@@ -12,6 +12,7 @@ export class ChartDataService {
     getChartData(name: string): Observable<any> {
         var url = '../../../assets/files/' + name + '.json';
         return this.http.get(url).map((res: Response) => {
+            // console.log(res.json());
             return res.json()
         });
 

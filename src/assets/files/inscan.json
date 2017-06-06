@@ -1,6 +1,4 @@
-[{
-	"name": "States",
-	"colorByPoint": true,
+{
 	"data": [{
 		"name": "Delhi",
 		"y": 60.33,
@@ -25,5 +23,7 @@
 		"name": "Rajasthan",
 		"y": 0.2,
 		"drilldown": true
-	}]
-}]
+	}],
+	"name": "States",
+	"colorByPoint": true
+}

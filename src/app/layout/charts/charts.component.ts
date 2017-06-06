@@ -28,9 +28,12 @@ export class ChartsComponent implements OnInit {
     public chartHovered(e: any): void { }
     public saveInstance(chartInstance) { }
 
-    getChartData(name: any): void {
-            this.chartDataService.getChartData(name).subscribe(chartOptions => {
-                console.log(chartOptions);
+    public getChartData(name: any): void {
+            this.chartDataService.getChartData(name).subscribe(series => {
+                console.log(series);
+                // series.data;
+                // console.log(series);
+                console.log(this.chart.addSeries(series));
                 // this.createChart()
                 // chart.set(chartOptions,true);
     },
@@ -44,9 +47,10 @@ export class ChartsComponent implements OnInit {
     chart: any;
     charts = [];
     createChart(name: string){
-        // var series = this.getChartData(name);
+        var comp = this;
+        var series = this.getChartData(name);
 
-    var series = [{
+   /* var series = [{
 	"name": "States",
 	"colorByPoint": true,
 	"data": [{
@@ -74,20 +78,20 @@ export class ChartsComponent implements OnInit {
 		"y": 0.2,
 		"drilldown": true
 	}]
-}];
-        var chart = new Highcharts.Chart({
+}];*/
+        this.chart = new Highcharts.Chart({
                             chart: {
                                 name: name,
                                 type: 'column',
                                 renderTo: name,
                                 events: {
                                     drilldown: function (e) {
-                                        console.log(e.point.name);
                                         if (!e.seriesOptions) {
                                         
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
-                                                var series=this.getChartData(e.point.name);
+                                                var series=comp.getChartData(e.point.name);
+                                                console.log(e.point.name);
                                                 chart.hideLoading();
                                                 chart.addSeriesAsDrilldown(e.point, series);
                                         }
@@ -115,7 +119,7 @@ export class ChartsComponent implements OnInit {
                                 }
                             },
                         
-                            series: series,
+                            series: [],
                             drilldown: {
                                 series: []
                             }
