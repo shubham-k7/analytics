@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
 })
 export class LayoutComponent implements OnInit {
 
-    constructor(public router: Router) { }
+    constructor(public router: Router) { 
+    }
 
     ngOnInit() {
-        if (this.router.url === '/') {
+        // console.log("hahah");
+        if (this.router.url === '') {
             this.router.navigate(['/dashboard']);
         }
     }

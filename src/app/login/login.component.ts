@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
     constructor(public router: Router,
                 private authenticationService: AuthenticationService) { }
 
-    ngOnInit() { this.error='';}
+    ngOnInit() { this.error=''; console.log("fdas");}
 
     login() {
         // console.log(this.model.username);

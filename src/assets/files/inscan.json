@@ -1,0 +1,29 @@
+[{
+	"name": "States",
+	"colorByPoint": true,
+	"data": [{
+		"name": "Delhi",
+		"y": 60.33,
+		"drilldown": true
+	}, {
+		"name": "Haryana",
+		"y": 24.03,
+		"drilldown": true
+	}, {
+		"name": "Uttar Pradesh",
+		"y": 10.38,
+		"drilldown": true
+	}, {
+		"name": "Punjab",
+		"y": 4.77,
+		"drilldown": true
+	}, {
+		"name": "Uttarakhand",
+		"y": 0.91,
+		"drilldown": true
+	}, {
+		"name": "Rajasthan",
+		"y": 0.2,
+		"drilldown": true
+	}]
+}]

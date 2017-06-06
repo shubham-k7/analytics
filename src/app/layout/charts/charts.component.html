@@ -1,4 +1,18 @@
-<app-page-header [heading]="'Charts'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<app-page-header [heading]="'Analytics'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<!--<li class="nav-item dropdown" ngbDropdown>
+    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+        <i class="fa fa-language"></i> {{ 'language' | translate }} <b class="caret"></b>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('en')">English</a>
+        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('fr')">French</a>
+        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('ur')">Urdu</a>
+    </div>
+</li>-->
+
+
+
+
 <div class="row">
     <div class="col col-sm-6">
         <div class="card mb-3">
@@ -6,11 +20,8 @@
                 Bar Chart
             </div>
             <div class="card-block">
-                <!--<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>-->
-                <!--<chart [options]="options" (load)="saveInstance($event.context)"></chart>-->
-            <chart [options]="options1" id="c1" (drilldown)="onChartSelection($event)"></chart>
-
+                <div id="inscan"></div>
+                <!--<chart [options]="options1" (load)="saveInstance($event.context)"></chart>-->
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
@@ -21,7 +32,7 @@
                 Chart 2
             </div>
             <div class="card-block">
-                <chart [options]="options1" id="c2" (drilldown)="onChartSelection($event)"></chart>
+                <div id="chart1"></div>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
@@ -29,80 +40,3 @@
         </div>
     </div>
 </div>
-
-<!--<div class="row">-->
-
-<!--<button (click)="addPoint()">Add Point</button>-->
-<!--</div>-->
-
-
-
-    <!--<LineChart-->
-    <!-- This element's contents will be replaced with your component. -->
-
-                <!--<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>-->
-    <!--</div>-->
-    <!--<script src="index.js"></script>-->
-    <!--<div id="bar"></div>-->
-
-   <!-- <div class="col col-sm-6">
-        <div class="card mb-3">
-            <div class="card-header">
-                Doughnut Chart
-            </div>
-            <div class="card-block">
-                <canvas baseChart height="180px" [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col col-sm-6">
-        <div class="card mb-3">
-            <div class="card-header">
-                Radar Chart
-            </div>
-            <div class="card-block">
-                <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels" [chartType]="radarChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>
-            </div>
-        </div>
-    </div>
-    <div class="col col-sm-6">
-        <div class="card mb-3">
-            <div class="card-header">
-                Pie Chart
-            </div>
-            <div class="card-block">
-                <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col col-sm-6">
-        <div class="card mb-3">
-            <div class="card-header">
-                Polar Area Chart
-            </div>
-            <div class="card-block">
-                <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>
-            </div>
-        </div>
-    </div>
-    <div class="col col-sm-6">
-        <div class="card mb-3">
-            <div class="card-header">
-                Line Chart
-            </div>
-            <div class="card-block">
-                <canvas baseChart height="130" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                </canvas>
-            </div>
-        </div>
-    </div>
-</div>-->

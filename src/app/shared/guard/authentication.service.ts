@@ -7,13 +7,17 @@ import 'rxjs/add/operator/map'
 @Injectable()
 export class AuthenticationService {
     public token: string;
- 
+    private isLoggedIn=false;
     constructor(public router: Router,private http: Http) {
         // set token if saved in local storage
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
     }
  
+    isLogged(): any {
+        return this.isLogged;
+    }
+
     login(username: string, password: string): Observable<boolean> {
         let headers = new Headers({'content-type': 'application/json'});
         let options = new RequestOptions({ headers: headers});
@@ -24,14 +28,14 @@ export class AuthenticationService {
                 // console.log('----', response.status);
                 // let token = response.json() && response.json()['data']['auth_key'];
             //    if(response.json())
-               
+               this.isLoggedIn=true;
                 if(response.json()['success']==true)
                 {
                     let token = response.json()['data']['auth_key'];
                     this.token = token;
                     // console.log(response.json()['data']);
                     // store username and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify({ data: response.json()['data'], token: token }));
+                    sessionStorage.setItem('currentUser', JSON.stringify({ data: response.json()['data'], token: token }));
                     // return true to indicate successful login
                     return true;
                 }
@@ -50,7 +54,8 @@ export class AuthenticationService {
     logout(): void {
         // clear token remove user from local storage to log user out
         this.token = null;
-        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+        this.isLoggedIn=false;
         this.router.navigate(['']);
     }
 }

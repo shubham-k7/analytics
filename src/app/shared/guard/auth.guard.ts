@@ -10,7 +10,7 @@ export class AuthGuard implements CanActivate, CanDeactivate<boolean>{
     canActivate() {
         // return true;
         // user: 
-        if (localStorage.getItem('currentUser')) {
+        if (sessionStorage.getItem('currentUser')) {
             return true;
         }
 
@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate, CanDeactivate<boolean>{
 
     canDeactivate() {
         // console.log("reached CanDeactivate");
-        if (localStorage.getItem('currentUser')) {
+        if (sessionStorage.getItem('currentUser')) {
             this.router.navigate['/dashboard'];
             console.log("reached if");
             // this.router.navigate(['/dashboard']);
