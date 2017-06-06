@@ -29,11 +29,20 @@ export class ChartsComponent implements OnInit {
     public saveInstance(chartInstance) { }
 
     public getChartData(name: any): void {
+            var arg = name;
+            if(name!=="inscan")
+                name = name.name;
             this.chartDataService.getChartData(name).subscribe(series => {
-                console.log(series);
+                // console.log(this.charts[0]);
                 // series.data;
                 // console.log(series);
-                console.log(this.chart.addSeries(series));
+                if(name==="inscan")
+                    this.charts[0].addSeries(series);
+                else{
+                    this.charts[0].hideLoading();
+                    this.charts[0].addSeriesAsDrilldown(arg,series);
+                }
+                // console.log(this.charts[0].addSeries(series));
                 // this.createChart()
                 // chart.set(chartOptions,true);
     },
@@ -44,42 +53,13 @@ export class ChartsComponent implements OnInit {
         );
 
     }
-    chart: any;
+    // chart: any;
     charts = [];
+    
     createChart(name: string){
         var comp = this;
         var series = this.getChartData(name);
-
-   /* var series = [{
-	"name": "States",
-	"colorByPoint": true,
-	"data": [{
-		"name": "Delhi",
-		"y": 60.33,
-		"drilldown": true
-	}, {
-		"name": "Haryana",
-		"y": 24.03,
-		"drilldown": true
-	}, {
-		"name": "Uttar Pradesh",
-		"y": 10.38,
-		"drilldown": true
-	}, {
-		"name": "Punjab",
-		"y": 4.77,
-		"drilldown": true
-	}, {
-		"name": "Uttarakhand",
-		"y": 0.91,
-		"drilldown": true
-	}, {
-		"name": "Rajasthan",
-		"y": 0.2,
-		"drilldown": true
-	}]
-}];*/
-        this.chart = new Highcharts.Chart({
+        this.charts.push(new Highcharts.Chart({
                             chart: {
                                 name: name,
                                 type: 'column',
@@ -90,10 +70,11 @@ export class ChartsComponent implements OnInit {
                                         
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
-                                                var series=comp.getChartData(e.point.name);
-                                                console.log(e.point.name);
-                                                chart.hideLoading();
-                                                chart.addSeriesAsDrilldown(e.point, series);
+                                                var series=comp.getChartData(e.point);
+                                                console.log(e.point);
+                                                // console.log(series);
+                                                // chart.hideLoading();
+                                                // chart.addSeriesAsDrilldown(e.point, series);
                                         }
                                     
                                     }
@@ -123,17 +104,13 @@ export class ChartsComponent implements OnInit {
                             drilldown: {
                                 series: []
                             }
-                        });
+                        }));
                         // chart.series[0].update(series);
 
     }
-
     options1: any;
     ngOnInit() {
         console.log("React Charts here");
-        // this.getChartData("inscan");
         this.createChart("inscan");
-        // this.charts[0].update();
-    // this.getChartData();
 }
 }
