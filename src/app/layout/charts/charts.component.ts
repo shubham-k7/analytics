@@ -49,18 +49,20 @@ export class ChartsComponent implements OnInit {
                 else{
 
                     chart.hideLoading();
+                    // console.log(chart.title.text);
+
                     // console.log(name);
                     // this.charts[0].
                     // console.log()
                     // chart.setTitle({text: newTitle});
                     chart.addSeriesAsDrilldown(arg,series);
+                    
                 }
                 // console.log(this.charts[0].addSeries(series));
     },
             (err) => {
                 console.log("ERROR occured");
                 this.charts[0].hideLoading();
-
                 // return null;
             }
         );
@@ -82,9 +84,10 @@ export class ChartsComponent implements OnInit {
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
                                                 // console.log(series);
+                                                var parentTitle = this.title.textStr;
+                                                // console.log();
                                                 var series=comp.getChartData(e.point);
-                                                var newTitle = titleName + '->' + e.point.name;
-                                                // console.log(e.point);
+                                                var newTitle = parentTitle + '->' + e.point.name;
                                                 chart.setTitle({text: newTitle});
                                                 
                                                 // this.chartName = this.chartName + '->' + name;
