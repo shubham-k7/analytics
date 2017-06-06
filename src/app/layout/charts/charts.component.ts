@@ -99,7 +99,7 @@ export class ChartsComponent implements OnInit {
                                     drillup: function(e) {
 
                                         var newTitle = e.seriesOptions.name;
-                                        // console.log(newTitle);
+                                        console.log(e.seriesOptions);
                                         this.setTitle({text: newTitle})
                                         // this.chartName = this.charts[0].options.
                                     }
