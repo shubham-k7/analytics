@@ -2,11 +2,39 @@
     "name": "Delhi",
     "id": "Delhi",
     "data": [
-        ["v11.0", 24.13],
-        ["v10.0", 5.33],
-        ["v9.0", 8.11],
-        ["v8.0", 17.2],
-        ["v6.0", 1.06],
-        ["v7.0", 0.5]
-    ]
+        {
+        "name": "City1",
+        "id": "City1",
+        "y": 24.13,
+        "drilldown": true
+    },
+    {
+        "name": "City2",
+        "id": "City2",
+        "y": 5.33,
+        "drilldown": true
+    },
+    {
+        "name": "City3",
+        "id": "City3",
+        "y": 8.11,
+        "drilldown": true
+    },
+    {
+        "name": "City4",
+        "id": "City4",
+        "y": 17.2,
+        "drilldown": true
+    },
+    {
+        "name": "City5",
+        "id": "City5",
+        "y": 1.06,
+        "drilldown": true
+    },{
+        "name": "City6",
+        "id": "City6",
+        "y": 0.5,
+        "drilldown": true
+    }]
 }
