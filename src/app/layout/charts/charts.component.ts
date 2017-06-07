@@ -27,7 +27,13 @@ export class ChartsComponent implements OnInit {
     public chartClicked(e: any): void { }
     public chartHovered(e: any): void { }
     public saveInstance(chartInstance) { }
+    /*public addPoint() {
+        this.zone.runOutsideAngular(() => {
+        location.reload();
+});
 
+    }
+*/
     public getChartData(arg: any,chartName: string): void {
             // var arg = name;
             // console.log(this.drilldowns.length);
@@ -164,6 +170,11 @@ export class ChartsComponent implements OnInit {
                                 }]
                             }
                         });
+                    if(name==='inscan')
+                        chart.yAxis[0].setTitle({text: "Time Difference(Mins)"});
+                    else
+                        chart.yAxis[0].setTitle({text: "Percentage"});
+                        
                     return this.charts.push(chart)-1;
     }
     // chart2Init(name: string): 
