@@ -40,8 +40,8 @@ export class ChartsComponent implements OnInit {
                 if(name==="inscan"){
                     // this.charts[0].series[0].remove(true);
                     // console.log(series.name);
-                    var titleName = series.name;
-                    let index = this.chartInit(name,titleName);
+                    var titleName = series.name,
+                        index = this.chartInit(name,titleName);
                     this.charts[index].setTitle({text: series.name});
                     this.charts[index].addSeries(series);
                 }
@@ -63,7 +63,6 @@ export class ChartsComponent implements OnInit {
             (err) => {
                 console.log("ERROR occured");
                 this.charts[0].hideLoading();
-                // return null;
             }
         );
 
@@ -129,6 +128,36 @@ export class ChartsComponent implements OnInit {
                             series: [],
                             drilldown: {
                                 series: []
+                            },
+                             responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            align: 'center',
+                                            verticalAlign: 'bottom',
+                                            layout: 'horizontal'
+                                        },
+                                        yAxis: {
+                                            labels: {
+                                                align: 'left',
+                                                x: 0,
+                                                y: -5
+                                            },
+                                            title: {
+                                                text: null
+                                            }
+                                        },
+                                        subtitle: {
+                                            text: null
+                                        },
+                                        credits: {
+                                            enabled: false
+                                        }
+                                    }
+                                }]
                             }
                         });
                     return this.charts.push(chart)-1;
@@ -136,66 +165,6 @@ export class ChartsComponent implements OnInit {
     createChart(name: string){
         var series = this.getChartData(name);
         console.log(series);
-        /*this.charts.push(new Highcharts.Chart({
-                            chart: {
-                                name: name,
-                                type: 'column',
-                                renderTo: name,
-                                events: {
-                                    drilldown: function (e) {
-                                        if (!e.seriesOptions) {
-                                                var chart = this;
-                                                chart.showLoading('Fetching Data ...');
-                                                // console.log(series);
-                                                var series=comp.getChartData(e.point);
-                                                var newTitle = series + '->' + name;
-                                                
-                                                console.log(e.point);
-                                                
-                                                
-                                                // this.chartName = this.chartName + '->' + name;
-                                                // console.log(series);
-                                                // chart.hideLoading();
-                                                // chart.addSeriesAsDrilldown(e.point, series);
-                                        }
-                                    },
-                                    drillup: function(e) {
-
-                                        var newTitle = e.seriesOptions.name;
-                                        console.log(newTitle);
-                                        this.setTitle({text: newTitle})
-                                        // this.chartName = this.charts[0].options.
-                                    }
-                                }
-                            },
-                            title: {
-                                text: ""
-                            },
-                            xAxis: {
-                                type: 'category'
-                            },
-                        
-                            legend: {
-                                enabled: false
-                            },
-                        
-                            plotOptions: {
-                                series: {
-                                    borderWidth: 0,
-                                    dataLabels: {
-
-                                        enabled: true
-                                    }
-                                }
-                            },
-                        
-                            series: [],
-                            drilldown: {
-                                series: []
-                            }
-                        }));*/
-                        // chart.series[0].update(series);
-
     }
     options1: any;
     chartName: any;
