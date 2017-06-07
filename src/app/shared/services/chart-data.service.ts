@@ -12,7 +12,7 @@ export class ChartDataService {
     
     private extractData(res: Response) {
         let body = res.json();
-        return body.data || { };
+        return body || { };
     }
     private handleError(error: Response | any) {
         let errMsg: string;
@@ -33,17 +33,7 @@ export class ChartDataService {
 
     getChartData(name: string): Observable<any> {
         var url = '../../../assets/files/' + name + '.json';
-        return this.http.get(url).map((res: Response) => {
-            // console.log(res.json());
-            return res.json()
-        });
-
-      /*  return this.http.get("https://jsonplaceholder.typicode.com/posts").map((res: Response) => {
-            // console.log("inside data service");
-            // console.log(res.json());
-            this.chartData = res.json();
-            // console.log(this.chartData);
-            return this.options;
-        });*/
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
     }
+
 }

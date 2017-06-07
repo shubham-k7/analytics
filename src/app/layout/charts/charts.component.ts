@@ -28,39 +28,13 @@ export class ChartsComponent implements OnInit {
     public chartHovered(e: any): void { }
     public saveInstance(chartInstance) { }
 
-    public getChartData(name: any): void {
-            var arg = name;
+    public getChartData(arg: any): void {
+            // var arg = name;
             let chart = this.charts[0];
-            if(name!=="inscan")
-                name = name.name;
-            this.chartDataService.getChartData(name).subscribe(series => {
-                // console.log(this.charts[0]);
-                // series.data;
-                // console.log(series);
-                if(name==="inscan"){  // New Chart Request
-                    // this.charts[0].series[0].remove(true);
-                    // console.log(series.name);
-                    var titleName = series.name,
-                        index = this.chartInit(name,titleName);
-                    this.charts[index].setTitle({text: series.name});
-                    this.charts[index].addSeries(series);
-                }
-
-                else{                   // Drilldown Request
-
+            this.chartDataService.getChartData(arg.name).subscribe(series => {
                     chart.hideLoading();
-                    // console.log(chart.title.text);
-
-                    // console.log(name);
-                    // this.charts[0].
-                    // console.log()
-                    // chart.setTitle({text: newTitle});
-                    
                     chart.addSeriesAsDrilldown(arg,series);
-                    
-                }
-                // console.log(this.charts[0].addSeries(series));
-    },
+            },
             (err) => {
                 console.log("ERROR occured");
                 this.charts[0].hideLoading();
@@ -71,7 +45,7 @@ export class ChartsComponent implements OnInit {
     // chart: any;
     charts = [];
     drilldowns = [];
-    chartInit(name: string,titleName: string): number {
+    chartInit(name: string): number {
         var comp = this;
         var chart = new Highcharts.Chart({
                             chart: {
@@ -83,47 +57,26 @@ export class ChartsComponent implements OnInit {
                                         if (!e.seriesOptions) {
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
-                                                // console.log(series);
-                                                var parentTitle = this.title.textStr;
-                                                // console.log();
                                                 comp.drilldowns.push(e.point.name);
-                                                var series=comp.getChartData(e.point);
-                                                var newTitle = parentTitle + ' -> ' + e.point.name;
-                                                chart.setTitle({text: newTitle});
-                                                
-                                                // this.chartName = this.chartName + '->' + name;
-                                                // console.log(series);
-                                                // chart.hideLoading();
-                                                // chart.addSeriesAsDrilldown(e.point, series);
+                                                comp.getChartData(e.point);
                                         }
                                     },
                                     drillup: function(e) {
-                                        var parent = this.title.textStr;
-                                        parent = parent.split(' -> ');
-                                        parent.pop();
-                                        console.log(parent);
-                                        // this.drilldowns = parent;
+                                        // console.log(parent);
                                         comp.drilldowns.pop();
-                                        // for(var p in pare)
-                                        console.log(this.title.textStr);
-                                        var newTitle = e.seriesOptions.name;
-                                        console.log(e.seriesOptions);
-                                        this.setTitle({text: newTitle})
-                                        // this.chartName = this.charts[0].options.
+                                        // console.log(e.seriesOptions);
                                     }
                                 }
                             },
                             title: {
-                                text: titleName
+                                text: null
                             },
                             xAxis: {
                                 type: 'category'
                             },
-                        
                             legend: {
                                 enabled: false
                             },
-                        
                             plotOptions: {
                                 series: {
                                     borderWidth: 0,
@@ -133,7 +86,6 @@ export class ChartsComponent implements OnInit {
                                     }
                                 }
                             },
-                        
                             series: [],
                             drilldown: {
                                 series: []
@@ -169,13 +121,21 @@ export class ChartsComponent implements OnInit {
                                 }]
                             }
                         });
-                        // var s = [chart.title]
-                        this.drilldowns.push(titleName);
                     return this.charts.push(chart)-1;
     }
+    getChart(name: string) {
+            var arg = name;
+            let chart = this.charts[0];
+            this.chartDataService.getChart(name).subscribe(series => {
+                    var titleName = series.name,
+                    index = this.chartInit(name);
+                    this.drilldowns.push(series.name);
+                    this.charts[index].addSeries(series);
+                
+        });
+}
     createChart(name: string){
-        var series = this.getChartData(name);
-        console.log(series);
+        this.getChart(name);
     }
     options1: any;
     chartName: any;
