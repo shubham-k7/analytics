@@ -12,6 +12,7 @@ export class ChartDataService {
     
     private extractData(res: Response) {
         let body = res.json();
+        console.log(body);
         return body || { };
     }
     private handleError(error: Response | any) {
@@ -27,16 +28,25 @@ export class ChartDataService {
         return Observable.throw(errMsg);
     }
     getChart(name: string): Observable<any> {
-        // var url = '../../../assets/files/' + name + '.json';
+        var url = 'http://52.70.207.115:8087/api/v1/' + name + '/report/';
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
         let options = new RequestOptions({ headers: headers});
-        return this.http.post('http://52.70.207.115:8087/api/v1/inscan/report/', JSON.stringify({ report_type: name}),options).map(this.extractData).catch(this.handleError);
+        return this.http.post(url, JSON.stringify({ report_type: name}),options).map(this.extractData).catch(this.handleError);
     }
 
-    getChartData(name: string): Observable<any> {
-        var url = '../../../assets/files/' + name + '.json';
-        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    getChartData(temp: any): Observable<any> {
+        var name;
+        // if(temp.report_type==2)
+            // temp.report_type = "States";
+        // else if(temp.report_type==3)
+            // temp.report_type = ""
+        var url = 'http://52.70.207.115:8087/api/v1/' + "inscan" + '/report/';
+        console.log(temp);
+        let headers = new Headers({'content-type': 'application/json'});
+        headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
+        let options = new RequestOptions({ headers: headers});
+        return this.http.post(url, JSON.stringify(temp),options).map(this.extractData).catch(this.handleError);
     }
 
 }

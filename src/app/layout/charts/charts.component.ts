@@ -30,10 +30,15 @@ export class ChartsComponent implements OnInit {
 
     public getChartData(arg: any): void {
             // var arg = name;
+            // console.log(this.drilldowns.length);
+
+            var temp = {name: arg.name,report_type: this.drilldowns.length}
             let chart = this.charts[0];
-            this.chartDataService.getChartData(arg.name).subscribe(series => {
+            this.chartDataService.getChartData(temp).subscribe(series => {
+                    console.log(series);
                     chart.hideLoading();
-                    chart.addSeriesAsDrilldown(arg,series);
+                    if(series.name!=="States")
+                        chart.addSeriesAsDrilldown(arg,series);
             },
             (err) => {
                 console.log("ERROR occured");
@@ -123,14 +128,18 @@ export class ChartsComponent implements OnInit {
                         });
                     return this.charts.push(chart)-1;
     }
+    // chart2Init(name: string): 
     getChart(name: string) {
             var arg = name;
             let chart = this.charts[0];
             this.chartDataService.getChart(name).subscribe(series => {
                     var titleName = series.name,
                     index = this.chartInit(name);
-                    this.drilldowns.push(series.name);
-                    this.charts[index].addSeries(series);
+                    // if(this.drilldowns.length==0){
+                        this.drilldowns.push(series.name);
+                        this.charts[index].addSeries(series);
+                    // }
+                    // }
                 
         });
 }
