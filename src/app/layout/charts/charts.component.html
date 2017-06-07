@@ -21,7 +21,7 @@
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns" (click)="charts[0].drill()">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns">
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
@@ -42,7 +42,16 @@
                 Chart 2
             </div>
             <div class="card-block">
-                <div id="count"></div>
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns2">
+                    <i>{{drill}}</i> 
+                </li>
+                <!--<li class="breadcrumb-item"><i></i> </li>-->
+                </ol>
+                <form class="form-inline my-2 my-lg-0">
+             <input class="form-control mr-sm-2" type="text" placeholder="Filter">
+            </form>
+                <div id="inscan_percent"></div>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>

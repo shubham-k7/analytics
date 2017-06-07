@@ -37,12 +37,8 @@ export class ChartDataService {
 
     getChartData(temp: any): Observable<any> {
         var name;
-        // if(temp.report_type==2)
-            // temp.report_type = "States";
-        // else if(temp.report_type==3)
-            // temp.report_type = ""
-        var url = 'http://52.70.207.115:8087/api/v1/' + "inscan" + '/report/';
         console.log(temp);
+        var url = 'http://52.70.207.115:8087/api/v1/' + "inscan" + '/report/';
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
         let options = new RequestOptions({ headers: headers});

@@ -28,17 +28,40 @@ export class ChartsComponent implements OnInit {
     public chartHovered(e: any): void { }
     public saveInstance(chartInstance) { }
 
-    public getChartData(arg: any): void {
+    public getChartData(arg: any,chartName: string): void {
             // var arg = name;
             // console.log(this.drilldowns.length);
+            var comp=this;
+            var t,co;
+            if(chartName==='inscan'){
+                co = this.charts[0];
+                t = this.drilldowns.length;
+            }
+            else{
+                co = this.charts[1];
+                t=this.drilldowns2.length;
+            }
 
-            var temp = {name: arg.name,report_type: this.drilldowns.length}
-            let chart = this.charts[0];
+
+            var temp = {name: arg.name,report_type: t}
+            console.log(temp);
+            // let chart = this.charts[0];
             this.chartDataService.getChartData(temp).subscribe(series => {
-                    console.log(series);
+                    // console.log(series);
+                    // console.log(temp);
+                    var chart;
+                    if(chartName==="inscan")
+                        chart = comp.charts[0];
+                    else
+                        chart = comp.charts[1];
+                    // console.log(chart);
+                    // console.log(co);
                     chart.hideLoading();
-                    if(series.name!=="States")
-                        chart.addSeriesAsDrilldown(arg,series);
+                    // console.log(arg);
+                    chart.addSeriesAsDrilldown(arg,series);
+                    // chart.hideLoading();
+                    // if(series.name!=="States")
+                        // chart.addSeriesAsDrilldown(arg,series);
             },
             (err) => {
                 console.log("ERROR occured");
@@ -50,6 +73,7 @@ export class ChartsComponent implements OnInit {
     // chart: any;
     charts = [];
     drilldowns = [];
+    drilldowns2 = [];
     chartInit(name: string): number {
         var comp = this;
         var chart = new Highcharts.Chart({
@@ -62,13 +86,27 @@ export class ChartsComponent implements OnInit {
                                         if (!e.seriesOptions) {
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
-                                                comp.drilldowns.push(e.point.name);
-                                                comp.getChartData(e.point);
+                                                var chartName = this.pointer.options.chart.name;
+                                                // console.log(this.pointer.options.chart.name); 
+
+
+                                                if(chartName==='inscan') 
+                                                    comp.drilldowns.push(e.point.name);
+                                                else
+                                                    comp.drilldowns2.push(e.point.name);
+                                                // comp.drilldowns.push(e.point.name);
+
+                                                comp.getChartData(e.point,chartName);
                                         }
                                     },
                                     drillup: function(e) {
                                         // console.log(parent);
-                                        comp.drilldowns.pop();
+                                        var chartName = this.pointer.options.chart.name;
+                                        console.log(chartName);
+                                        if(chartName==='inscan')
+                                            comp.drilldowns.pop();
+                                        else
+                                            comp.drilldowns2.pop();
                                         // console.log(e.seriesOptions);
                                     }
                                 }
@@ -131,16 +169,24 @@ export class ChartsComponent implements OnInit {
     // chart2Init(name: string): 
     getChart(name: string) {
             var arg = name;
-            let chart = this.charts[0];
+            var chart;
+            if(name==="inscan_percent")
+                chart = this.charts[1];
+            else 
+                chart = this.charts[0];
             this.chartDataService.getChart(name).subscribe(series => {
-                    var titleName = series.name,
-                    index = this.chartInit(name);
-                    // if(this.drilldowns.length==0){
-                        this.drilldowns.push(series.name);
+                    var titleName = series.name,index;
+                    this.chartInit(name);
+                        if(name==='inscan'){
+                            index=0;
+                            this.drilldowns.push(series.name);
+                        }
+                        else{
+                            index=1;
+                            this.drilldowns2.push(series.name);
+                        }
+                        // console.log()
                         this.charts[index].addSeries(series);
-                    // }
-                    // }
-                
         });
 }
     createChart(name: string){
@@ -150,7 +196,8 @@ export class ChartsComponent implements OnInit {
     chartName: any;
     
     ngOnInit() {
-        this.chartName = "inscan";
-        this.createChart(this.chartName);
+        // this.chartName = "inscan";
+        this.createChart("inscan");
+        this.createChart("inscan_percent");
 }
 }
