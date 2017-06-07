@@ -37,7 +37,7 @@ export class ChartsComponent implements OnInit {
                 // console.log(this.charts[0]);
                 // series.data;
                 // console.log(series);
-                if(name==="inscan"){
+                if(name==="inscan"){  // New Chart Request
                     // this.charts[0].series[0].remove(true);
                     // console.log(series.name);
                     var titleName = series.name,
@@ -46,7 +46,7 @@ export class ChartsComponent implements OnInit {
                     this.charts[index].addSeries(series);
                 }
 
-                else{
+                else{                   // Drilldown Request
 
                     chart.hideLoading();
                     // console.log(chart.title.text);
@@ -55,6 +55,7 @@ export class ChartsComponent implements OnInit {
                     // this.charts[0].
                     // console.log()
                     // chart.setTitle({text: newTitle});
+                    
                     chart.addSeriesAsDrilldown(arg,series);
                     
                 }
@@ -69,7 +70,7 @@ export class ChartsComponent implements OnInit {
     }
     // chart: any;
     charts = [];
-    
+    drilldowns = [];
     chartInit(name: string,titleName: string): number {
         var comp = this;
         var chart = new Highcharts.Chart({
@@ -85,8 +86,9 @@ export class ChartsComponent implements OnInit {
                                                 // console.log(series);
                                                 var parentTitle = this.title.textStr;
                                                 // console.log();
+                                                comp.drilldowns.push(e.point.name);
                                                 var series=comp.getChartData(e.point);
-                                                var newTitle = parentTitle + '->' + e.point.name;
+                                                var newTitle = parentTitle + ' -> ' + e.point.name;
                                                 chart.setTitle({text: newTitle});
                                                 
                                                 // this.chartName = this.chartName + '->' + name;
@@ -96,7 +98,14 @@ export class ChartsComponent implements OnInit {
                                         }
                                     },
                                     drillup: function(e) {
-
+                                        var parent = this.title.textStr;
+                                        parent = parent.split(' -> ');
+                                        parent.pop();
+                                        console.log(parent);
+                                        // this.drilldowns = parent;
+                                        comp.drilldowns.pop();
+                                        // for(var p in pare)
+                                        console.log(this.title.textStr);
                                         var newTitle = e.seriesOptions.name;
                                         console.log(e.seriesOptions);
                                         this.setTitle({text: newTitle})
@@ -160,6 +169,8 @@ export class ChartsComponent implements OnInit {
                                 }]
                             }
                         });
+                        // var s = [chart.title]
+                        this.drilldowns.push(titleName);
                     return this.charts.push(chart)-1;
     }
     createChart(name: string){
@@ -168,9 +179,8 @@ export class ChartsComponent implements OnInit {
     }
     options1: any;
     chartName: any;
+    
     ngOnInit() {
-       this.charts = [];        
-        console.log("React Charts here");
         this.chartName = "inscan";
         this.createChart(this.chartName);
 }

@@ -20,8 +20,14 @@
                 {{chartName}}
             </div>
             <div class="card-block">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns" (click)="charts[0].drill()">
+                    <i>{{drill}}</i> 
+                </li>
+                <!--<li class="breadcrumb-item"><i></i> </li>-->
+                </ol>
                 <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Filter">
+             <input class="form-control mr-sm-2" type="text" placeholder="Filter">
             </form>
                 <!--<input class="form-control mr-sm-2" type="text" placeholder="Search">-->
                 <div id="inscan"></div>

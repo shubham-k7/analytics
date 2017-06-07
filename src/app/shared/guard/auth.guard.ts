@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate, CanDeactivate<boolean>{
         if (sessionStorage.getItem('currentUser')) {
             return true;
         }
-
         this.router.navigate(['']);
         return false;
     }

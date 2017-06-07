@@ -22,7 +22,7 @@ export class AuthenticationService {
         let headers = new Headers({'content-type': 'application/json'});
         let options = new RequestOptions({ headers: headers});
         // console.log(username);
-        return this.http.post('http://zastapi.prtouch.com/api/authentication/token/', JSON.stringify({ username: username, password: password }),options)//,new RequestOptions({headers: new Headers()}))
+        return this.http.post('http://52.70.207.115:8087/api/authentication/token/', JSON.stringify({ username: username, password: password }),options)//,new RequestOptions({headers: new Headers()}))
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 // console.log('----', response.status);
