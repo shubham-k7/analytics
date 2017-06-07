@@ -27,8 +27,11 @@ export class ChartDataService {
         return Observable.throw(errMsg);
     }
     getChart(name: string): Observable<any> {
-        var url = '../../../assets/files/' + name + '.json';
-        return this.http.get(url).map(this.extractData).catch(this.handleError);
+        // var url = '../../../assets/files/' + name + '.json';
+        let headers = new Headers({'content-type': 'application/json'});
+        headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
+        let options = new RequestOptions({ headers: headers});
+        return this.http.post('http://52.70.207.115:8087/api/v1/inscan/report/', JSON.stringify({ report_type: name}),options).map(this.extractData).catch(this.handleError);
     }
 
     getChartData(name: string): Observable<any> {
