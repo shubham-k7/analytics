@@ -49,7 +49,7 @@ export class ChartsComponent implements OnInit {
             }
 
 
-            var temp = {name: arg.name,report_type: t}
+            var temp = {name: arg.name,report_type: t,chartName: chartName}
             console.log(temp);
             // let chart = this.charts[0];
             this.chartDataService.getChartData(temp).subscribe(series => {
@@ -130,8 +130,8 @@ export class ChartsComponent implements OnInit {
                                 series: {
                                     borderWidth: 0,
                                     dataLabels: {
-
-                                        enabled: true
+                                        enabled: true,
+                                        format: '{point.y}%'
                                     }
                                 }
                             },
@@ -170,8 +170,10 @@ export class ChartsComponent implements OnInit {
                                 }]
                             }
                         });
-                    if(name==='inscan')
+                    if(name==='inscan'){
                         chart.yAxis[0].setTitle({text: "Time Difference(Mins)"});
+                        console.log(chart.options.plotOptions.series.dataLabels.format = '{point.y}');
+                    }
                     else
                         chart.yAxis[0].setTitle({text: "Percentage"});
                         
