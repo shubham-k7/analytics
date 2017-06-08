@@ -43,31 +43,109 @@ export class ChartsComponent implements OnInit {
                 co = this.charts[0];
                 t = this.drilldowns.length;
             }
-            else{
+            else if(chartName==='inscan_percent'){
                 co = this.charts[1];
                 t=this.drilldowns2.length;
             }
+            else{
+                co = this.charts[2];
+                t = this.drilldowns3.length;
+            }
 
 
-            var temp = {name: arg.name,report_type: t,chartName: chartName}
+            var temp = {name: arg.id,report_type: t,chartName: chartName}
             console.log(temp);
             // let chart = this.charts[0];
             this.chartDataService.getChartData(temp).subscribe(series => {
                     // console.log(series);
                     // console.log(temp);
                     var chart;
-                    if(chartName==="inscan")
+                    if(chartName==="inscan"){
                         chart = comp.charts[0];
-                    else
+                        chart.hideLoading();                        
+                        chart.addSeriesAsDrilldown(arg,series);
+                        // chart.hideLoading();
+                    }
+                    else if(chartName==='inscan_percent'){
                         chart = comp.charts[1];
-                    // console.log(chart);
-                    // console.log(co);
-                    chart.hideLoading();
-                    // console.log(arg);
-                    chart.addSeriesAsDrilldown(arg,series);
-                    // chart.hideLoading();
-                    // if(series.name!=="States")
-                        // chart.addSeriesAsDrilldown(arg,series);
+                        chart.hideLoading();                                                
+                        chart.addSeriesAsDrilldown(arg,series);
+                    }
+                    else{
+                        chart = comp.charts[2];
+                        chart.hideLoading();                                                
+                        chart.addSeriesAsDrilldown(arg, {
+ 	"name": "KNT",
+ 	"data": [{
+ 			"y": 1085,
+ 			"drilldown": true,
+ 			"name": "East",
+ 			"id": "East_booked"
+ 		},
+ 		{
+ 			"y": 1767,
+ 			"drilldown": true,
+ 			"name": "KNT",
+ 			"id": "KNT_booked"
+ 		},
+ 		{
+ 			"y": 831,
+ 			"drilldown": true,
+ 			"name": "N",
+ 			"id": "N_booked"
+ 		},
+ 		{
+ 			"y": 3212,
+ 			"drilldown": true,
+ 			"name": "NCR",
+ 			"id": "NCR_booked"
+ 		},
+ 		{
+ 			"y": 396,
+ 			"drilldown": true,
+ 			"name": "south",
+ 			"id": "south_booked"
+ 		},
+ 		{
+ 			"y": 3124,
+ 			"drilldown": true,
+ 			"name": "WE",
+ 			"id": "WE_booked"
+ 		}, {
+ 			"y": 727,
+ 			"drilldown": true,
+ 			"name": "East",
+ 			"id": "East_inscan"
+ 		},
+ 		{
+ 			"y": 1391,
+ 			"drilldown": true,
+ 			"name": "KNT",
+ 			"id": "KNT_inscan"
+ 		},
+ 		{
+ 			"y": 738,
+ 			"drilldown": true,
+ 			"name": "N",
+ 			"id": "N_inscan"
+ 		},
+ 		{
+ 			"y": 2473,
+ 			"drilldown": true,
+ 			"name": "NCR",
+ 			"id": "NCR_inscan"
+ 		},
+ 		{
+ 			"y": 2374,
+ 			"drilldown": true,
+ 			"name": "WE",
+ 			"id": "WE_inscan"
+ 		}
+ 	]
+ });               
+
+           }         // console.log(arg);
+                    
             },
             (err) => {
                 console.log("ERROR occured");
@@ -80,13 +158,41 @@ export class ChartsComponent implements OnInit {
     charts = [];
     drilldowns = [];
     drilldowns2 = [];
+    drilldowns3 = [];
     chartInit(name: string): number {
         var comp = this;
+        console.log(name); 
         var chart = new Highcharts.Chart({
                             chart: {
                                 name: name,
                                 type: 'column',
                                 renderTo: name,
+                                zoomType: 'x',
+                                panning: true,
+                                panKey: 'shift',
+                                resetZoomButton: {
+                                    position: {
+                                            align: 'center', // by default
+                                            verticalAlign: 'top', // by default
+                                            x: -20,
+                                            y: 10
+                                        },
+                                    relativeTo: 'chart',
+                                    theme: {
+                                        fill: 'white',
+                                        stroke: 'silver',
+                                        r: 0,
+                                        states: {
+                                            hover: {
+                                            fill: '#41739D',
+                                            style: {
+                                                color: 'white'
+                                                }
+                                            } 
+                                        }
+                                    }    
+                                }
+                                ,
                                 events: {
                                     drilldown: function (e) {
                                         if (!e.seriesOptions) {
@@ -94,15 +200,24 @@ export class ChartsComponent implements OnInit {
                                                 chart.showLoading('Fetching Data ...');
                                                 var chartName = this.pointer.options.chart.name;
                                                 // console.log(this.pointer.options.chart.name); 
-
-
+                                                console.log(e);
+                                                console.log(e.points);
                                                 if(chartName==='inscan') 
                                                     comp.drilldowns.push(e.point.name);
-                                                else
+                                                else if(chartName==='inscan_percent')
                                                     comp.drilldowns2.push(e.point.name);
-                                                // comp.drilldowns.push(e.point.name);
-
-                                                comp.getChartData(e.point,chartName);
+                                                else if(e.points){
+                                                    console.log(e.points[0].name);
+                                                        if(comp.drilldowns3.indexOf(e.points[0].name)<0)
+                                                            comp.drilldowns3.push(e.points[0].name);
+                                                }
+                                                    comp.getChartData(e.point,chartName);
+                                                    // if(e.points){
+                                                        // comp.drilldowns3.pop();
+                                                    // }
+                                                // else
+                                                    // comp.getChartData(e.point,chartName);
+                                                // console.log(e.point);
                                         }
                                     },
                                     drillup: function(e) {
@@ -111,8 +226,14 @@ export class ChartsComponent implements OnInit {
                                         console.log(chartName);
                                         if(chartName==='inscan')
                                             comp.drilldowns.pop();
-                                        else
+                                        else if(chartName==='inscan_percent')
                                             comp.drilldowns2.pop();
+                                        else{
+                                            if(comp.drilldowns3.indexOf(e.points[0].name)>0)
+                                                 comp.drilldowns3.pop();
+                                                            // comp.drilldowns3.push(e.points[0].name);
+
+                                        }
                                         // console.log(e.seriesOptions);
                                     }
                                 }
@@ -131,12 +252,13 @@ export class ChartsComponent implements OnInit {
                                     borderWidth: 0,
                                     dataLabels: {
                                         enabled: true,
-                                        format: '{point.y}%'
+                                        format: '{point.y}'
                                     }
                                 }
                             },
                             series: [],
                             drilldown: {
+                                allowPointDrilldown: true,
                                 series: []
                             },
                              responsive: {
@@ -172,10 +294,19 @@ export class ChartsComponent implements OnInit {
                         });
                     if(name==='inscan'){
                         chart.yAxis[0].setTitle({text: "Time Difference(Mins)"});
-                        console.log(chart.options.plotOptions.series.dataLabels.format = '{point.y}');
                     }
-                    else
+                    else if(name==='inscan_percent'){
+                        chart.options.plotOptions.series.dataLabels.format = '{point.y}%';
                         chart.yAxis[0].setTitle({text: "Percentage"});
+                        // console.log(chart.yAxis[0]);
+                        chart.yAxis[0].min = 0;
+                        chart.yAxis[0].max = 100;
+                    }
+                    else{
+                        chart.yAxis[0].setTitle({text: "Count"});
+                        // chart.drilldown.allowPointDrilldown = false;
+                    }
+
                         
                     return this.charts.push(chart)-1;
     }
@@ -192,14 +323,28 @@ export class ChartsComponent implements OnInit {
                     this.chartInit(name);
                         if(name==='inscan'){
                             index=0;
-                            this.drilldowns.push(series.name);
+                            this.drilldowns.push("All");
+                            this.charts[index].addSeries(series);
+                        }
+                        else if(name==="inscan_percent"){
+                            index=1;
+                            this.drilldowns2.push("All");
+                            this.charts[index].addSeries(series);                                
                         }
                         else{
-                            index=1;
-                            this.drilldowns2.push(series.name);
+                            index=2;
+                            this.drilldowns3.push("All");
+                            // this.charts[index].series[0].setData(series[0]);
+                            // this.charts[index].series[0].setData(series[0]);
+                            
+                            this.charts[index].addSeries(series[0]);
+                            this.charts[index].addSeries(series[1]);
                         }
-                        // console.log()
-                        this.charts[index].addSeries(series);
+                        // for(series.length){
+
+                        // }
+                        // this.charts[index].series[0].setData(series[0]);
+                        
         });
 }
     createChart(name: string){
@@ -212,5 +357,6 @@ export class ChartsComponent implements OnInit {
         // this.chartName = "inscan";
         this.createChart("inscan");
         this.createChart("inscan_percent");
+        this.createChart("inscan_booked_count");
 }
 }

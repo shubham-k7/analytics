@@ -37,7 +37,7 @@ export class ChartDataService {
 
     getChartData(temp: any): Observable<any> {
         var name;
-        console.log(temp);
+        // console.log(temp);
         // if(temp.chartName==)
         var url = 'http://52.70.207.115:8087/api/v1/' + temp.chartName + '/report/';
         let headers = new Headers({'content-type': 'application/json'});

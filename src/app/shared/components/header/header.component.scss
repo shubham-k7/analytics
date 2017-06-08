@@ -70,3 +70,6 @@ $topnav-background-color: #222;
 .header .navbar {
     background: $topnav-background-color !important;
 }
+.breadcrumb > li + li:before {
+       content: "\3E" /* Hex code for > */
+}
