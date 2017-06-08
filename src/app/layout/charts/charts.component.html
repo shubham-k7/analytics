@@ -1,45 +1,32 @@
 <app-page-header [heading]="'Analytics'" [icon]="'fa-bar-chart-o'"></app-page-header>
-<!--<li class="nav-item dropdown" ngbDropdown>
-    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
-        <i class="fa fa-language"></i> {{ 'language' | translate }} <b class="caret"></b>
-    </a>
-    <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('en')">English</a>
-        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('fr')">French</a>
-        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('ur')">Urdu</a>
-    </div>
-</li>-->
-
-
-
-
 <div class="row">
     <div class="col col-sm-6">
         <div class="card mb-3">
             <div class="card-header">
-                Performance 
+                Performance Inscan: Time 
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns; let last = last">
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
-                </ol>
-                <form class="form-inline my-2 my-lg-0">
+                <form class="form-inline my-2 my-lg-0" style="float: right;">
              <input class="form-control mr-sm-2" type="text" placeholder="Filter">
             </form>
-                <!--<input class="form-control mr-sm-2" type="text" placeholder="Search">-->
+                </ol>
                 <div id="inscan"></div>
-                <!--<chart [options]="options1" (load)="saveInstance($event.context)"></chart>-->
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
             </div>
         </div>
-        <div class="card mb-3">
+       
+    </div>
+<div class="col col-sm-6">
+     <div class="card mb-3">
             <div class="card-header">
-                Inscan Percent
+                Performance Inscan: Inscan Percent
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
@@ -47,15 +34,15 @@
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
-                </ol>
-                <form class="form-inline my-2 my-lg-0">
+                <form class="form-inline my-2 my-lg-0" style="float: right;">
              <input class="form-control mr-sm-2" type="text" placeholder="Filter">
             </form>
+                </ol>
                 <div id="inscan_percent"></div>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info btn-sm" (click)="addPoint()">Update</button>
             </div>
         </div>
-    </div>
+</div>
 </div>
