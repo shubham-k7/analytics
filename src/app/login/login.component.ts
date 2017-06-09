@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 
 import { AuthenticationService } from '../shared/guard/authentication.service';
-
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',

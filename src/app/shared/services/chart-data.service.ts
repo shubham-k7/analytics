@@ -32,6 +32,7 @@ export class ChartDataService {
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
         let options = new RequestOptions({ headers: headers});
+        
         return this.http.post(url, JSON.stringify({ report_type: name}),options).map(this.extractData).catch(this.handleError);
     }
 
