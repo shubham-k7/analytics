@@ -52,7 +52,7 @@ export class ChartsComponent implements OnInit {
                 t = this.drilldowns3.length;
             }
 
-
+            console.log(arg);
             var temp = {name: arg.id,report_type: t,chartName: chartName}
             console.log(temp);
             // let chart = this.charts[0];
@@ -73,77 +73,11 @@ export class ChartsComponent implements OnInit {
                     }
                     else{
                         chart = comp.charts[2];
-                        chart.hideLoading();                                                
-                        chart.addSeriesAsDrilldown(arg, {
- 	"name": "KNT",
- 	"data": [{
- 			"y": 1085,
- 			"drilldown": true,
- 			"name": "East",
- 			"id": "East_booked"
- 		},
- 		{
- 			"y": 1767,
- 			"drilldown": true,
- 			"name": "KNT",
- 			"id": "KNT_booked"
- 		},
- 		{
- 			"y": 831,
- 			"drilldown": true,
- 			"name": "N",
- 			"id": "N_booked"
- 		},
- 		{
- 			"y": 3212,
- 			"drilldown": true,
- 			"name": "NCR",
- 			"id": "NCR_booked"
- 		},
- 		{
- 			"y": 396,
- 			"drilldown": true,
- 			"name": "south",
- 			"id": "south_booked"
- 		},
- 		{
- 			"y": 3124,
- 			"drilldown": true,
- 			"name": "WE",
- 			"id": "WE_booked"
- 		}, {
- 			"y": 727,
- 			"drilldown": true,
- 			"name": "East",
- 			"id": "East_inscan"
- 		},
- 		{
- 			"y": 1391,
- 			"drilldown": true,
- 			"name": "KNT",
- 			"id": "KNT_inscan"
- 		},
- 		{
- 			"y": 738,
- 			"drilldown": true,
- 			"name": "N",
- 			"id": "N_inscan"
- 		},
- 		{
- 			"y": 2473,
- 			"drilldown": true,
- 			"name": "NCR",
- 			"id": "NCR_inscan"
- 		},
- 		{
- 			"y": 2374,
- 			"drilldown": true,
- 			"name": "WE",
- 			"id": "WE_inscan"
- 		}
- 	]
- });               
-
+                        chart.hideLoading();             
+                        console.log(arg);                              
+                        chart.addSeriesAsDrilldown(arg,series[0]);
+                        chart.addSingleSeriesAsDrilldown(arg,series[1]);                     
+                        // chart.applyDrilldown();
            }         // console.log(arg);
                     
             },
@@ -211,7 +145,9 @@ export class ChartsComponent implements OnInit {
                                                         if(comp.drilldowns3.indexOf(e.points[0].name)<0)
                                                             comp.drilldowns3.push(e.points[0].name);
                                                 }
-                                                    comp.getChartData(e.point,chartName);
+                                                else
+                                                    comp.drilldowns3.push(e.point.name);
+                                                comp.getChartData(e.point,chartName);
                                                     // if(e.points){
                                                         // comp.drilldowns3.pop();
                                                     // }
@@ -221,7 +157,7 @@ export class ChartsComponent implements OnInit {
                                         }
                                     },
                                     drillup: function(e) {
-                                        // console.log(parent);
+                                        console.log(e);
                                         var chartName = this.pointer.options.chart.name;
                                         console.log(chartName);
                                         if(chartName==='inscan')
@@ -229,7 +165,7 @@ export class ChartsComponent implements OnInit {
                                         else if(chartName==='inscan_percent')
                                             comp.drilldowns2.pop();
                                         else{
-                                            if(comp.drilldowns3.indexOf(e.points[0].name)>0)
+                                            // if(comp.drilldowns3.indexOf(e.point.name)>0) 
                                                  comp.drilldowns3.pop();
                                                             // comp.drilldowns3.push(e.points[0].name);
 
