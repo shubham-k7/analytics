@@ -20,113 +20,57 @@ HighchartsDrilldown(Highcharts);
 export class ChartsComponent implements OnInit {
 
     constructor(private chartDataService: ChartDataService){ }
-
-    // Charts defination
     
-        // events
-    public chartClicked(e: any): void { }
-    public chartHovered(e: any): void { }
-    public saveInstance(chartInstance) { }
-    /*public addPoint() {
-        this.zone.runOutsideAngular(() => {
-        location.reload();
-});
-
-    
-    }
-*/
     drilldownsAdded = 0;
     public getChartData(event: any,chartName: string): void {
-            // var arg = name;
-            // console.log(this.drilldowns.length);
             var comp=this;
-            var t,co;
-            if(chartName==='inscan'){
-                co = this.charts[0];
-                t = this.drilldowns.length;
-            }
-            else if(chartName==='inscan_percent'){
-                co = this.charts[1];
-                t=this.drilldowns2.length;
-            }
-            else{
-                co = this.charts[2];
-                t = this.drilldowns3.length;
-            }
-
-            // console.log(arg);
-            var temp = {name: event.point.id,report_type: t,chartName: chartName}
+            var t;
+            t = this.drilldowns[chartName].length;
+            console.log(event.point);
+            var temp = {name: event.point.id,
+                        report_type: t+1,
+                        chartName: chartName};
             console.log(temp);
-            // let chart = this.charts[0];
             this.chartDataService.getChartData(temp).subscribe(series => {
-                    // console.log(series);
-                    // console.log(temp);
                     var chart;
-                    if(chartName==="inscan"){
-                        chart = comp.charts[0];
-                        chart.hideLoading();                        
-                        chart.addSeriesAsDrilldown(event.point,series);
-                        // chart.hideLoading();
-                    }
-                    else if(chartName==='inscan_percent'){
-                        chart = comp.charts[1];
-                        chart.hideLoading();                                                
-                        chart.addSeriesAsDrilldown(event.point,series);
-                    }
-                    else if(event.points){
-                        chart = comp.charts[2];
-                        chart.hideLoading();             
-                        // console.log(arg.series.name);
-                        console.log(series);
+                    chart = comp.charts[chartName];
+                    chart.hideLoading();
+                    console.log(event);
+                    if(event.points)
+                    {
                         chart.addSingleSeriesAsDrilldown(event.point,series[0]);
                         comp.drilldownsAdded++;
-                        if(comp.drilldownsAdded===event.points.length){
+                        if(comp.drilldownsAdded===event.points.length) {
+                            var n = temp.name.split('_');
                             comp.drilldownsAdded=0;
                             chart.applyDrilldown();
+                            comp.drilldowns[chartName].push(n[0]);
                         }
                     }
-                    else
-                    {
-                        console.log(event.point)
-                        console.log(series[0]);
-                        chart = comp.charts[2];
-                        chart.hideLoading();                                                
-                        chart.addSeriesAsDrilldown(event.point,series[0]);
-
+                    else{
+                        chart.addSingleSeriesAsDrilldown(event.point,series[0]);
+                        chart.applyDrilldown();
+                        // console.log(chartName);
+                        console.log(comp.drilldowns);
+                        console.log(event);
+                        comp.drilldowns[chartName].push(event.point.name);
                     }
-
-
-
-
-
-                        // chart.redraw();
-                        // if(chart.events.drilldownchart.applyDrilldown();
-                        // if(chart.dri)
-                        // chart.addSingleSeriesAsDrilldown(arg,series);                     
-                        // chart.applyDrilldown();
-                    // console.log(arg);
-                    
             },
             (err) => {
                 console.log("ERROR occured");
-                this.charts[0].hideLoading();
+                this.charts[temp.chartName].hideLoading();
             }
         );
-
     }
-    // chart: any;
-    charts = [];
-    drilldowns = [];
-    drilldowns2 = [];
-    drilldowns3 = [];
-    chartInit(name: string): number {
+    charts: Map<string,any> = new Map();
+    drilldowns: Map<string,string[]> = new Map();
+    chartInit(id: string) {
         var comp = this;
-        console.log(name); 
         var chart = new Highcharts.Chart({
                             chart: {
-                                name: name,
+                                name: id,
                                 type: 'column',
-                                renderTo: name,
+                                renderTo: id,
                                 zoomType: 'x',
                                 panning: true,
                                 panKey: 'shift',
@@ -151,54 +95,28 @@ export class ChartsComponent implements OnInit {
                                             } 
                                         }
                                     }    
-                                }
-                                ,
+                                },
                                 events: {
                                     drilldown: function (e) {
                                         if (!e.seriesOptions) {
                                                 var chart = this;
                                                 chart.showLoading('Fetching Data ...');
-                                                var chartName = this.pointer.options.chart.name;
-                                                // console.log(this.pointer.options.chart.name); 
-                                                console.log(e);
-                                                console.log(e.points);
-                                                if(chartName==='inscan') 
-                                                    comp.drilldowns.push(e.point.name);
-                                                else if(chartName==='inscan_percent')
-                                                    comp.drilldowns2.push(e.point.name);
-                                                else if(e.points){
-                                                    console.log(e.points[0].name);
-                                                        if(comp.drilldowns3.indexOf(e.points[0].name)<0)
-                                                            comp.drilldowns3.push(e.points[0].name);
-                                                }
-                                                else
-                                                    comp.drilldowns3.push(e.point.name);
-                                                comp.getChartData(e,chartName);
-
-                                                    // if(e.points){
-                                                        // comp.drilldowns3.pop();
-                                                    // }
-                                                // else
-                                                    // comp.getChartData(e.point,chartName);
-                                                // console.log(e.point);
+                                                var chartid = this.pointer.options.chart.name;
+                                                console.log(e.point.name);
+                                                comp.getChartData(e,chartid);
                                         }
                                     },
                                     drillup: function(e) {
                                         console.log(e);
-                                        var chartName = this.pointer.options.chart.name;
-                                        console.log(chartName);
-                                        if(chartName==='inscan')
-                                            comp.drilldowns.pop();
-                                        else if(chartName==='inscan_percent')
-                                            comp.drilldowns2.pop();
-                                        else{
-                                            console.log(e.seriesOptions);
-                                            // if(comp.drilldowns3.indexOf(e.series.option)>0)
-                                                 comp.drilldowns3.pop();
-                                                            // comp.drilldowns3.push(e.points[0].name);
-
+                                        if(e.target.options.chart.name==='inscan_booked_count'){
+                                            comp.drilldownsAdded++;
+                                            if(comp.drilldownsAdded===2){
+                                                comp.drilldownsAdded=0;
+                                                comp.drilldowns[this.options.chart.name].pop();
+                                            }
                                         }
-                                        // console.log(e.seriesOptions);
+                                        else
+                                            comp.drilldowns[this.options.chart.name].pop();                                            
                                     }
                                 }
                             },
@@ -222,7 +140,7 @@ export class ChartsComponent implements OnInit {
                             },
                             series: [],
                             drilldown: {
-                                allowPointDrilldown: true,
+                                allowPointDrilldown: false,
                                 series: []
                             },
                              responsive: {
@@ -256,71 +174,37 @@ export class ChartsComponent implements OnInit {
                                 }]
                             }
                         });
-                    if(name==='inscan'){
+                    if(id==='inscan'){
                         chart.yAxis[0].setTitle({text: "Time Difference(Mins)"});
                     }
-                    else if(name==='inscan_percent'){
+                    else if(id==='inscan_percent'){
+
                         chart.options.plotOptions.series.dataLabels.format = '{point.y}%';
                         chart.yAxis[0].setTitle({text: "Percentage"});
-                        // console.log(chart.yAxis[0]);
                         chart.yAxis[0].min = 0;
                         chart.yAxis[0].max = 100;
                     }
                     else{
                         chart.yAxis[0].setTitle({text: "Count"});
-                        // chart.drilldown.allowPointDrilldown = false;
-                    }
-
-                        
-                    return this.charts.push(chart)-1;
+                    }   
+                    this.charts[id]=chart;
+                    console.log(chart);
     }
-    // chart2Init(name: string): 
-    getChart(name: string) {
-            var arg = name;
-            var chart;
-            if(name==="inscan_percent")
-                chart = this.charts[1];
-            else 
-                chart = this.charts[0];
-            this.chartDataService.getChart(name).subscribe(series => {
+    getChart(id: string) {
+            this.chartDataService.getChart(id).subscribe(series => {
                     var titleName = series.name,index;
-                    this.chartInit(name);
-                        if(name==='inscan'){
-                            index=0;
-                            this.drilldowns.push("All");
-                            this.charts[index].addSeries(series);
-                        }
-                        else if(name==="inscan_percent"){
-                            index=1;
-                            this.drilldowns2.push("All");
-                            this.charts[index].addSeries(series);                                
-                        }
-                        else{
-                            index=2;
-                            this.drilldowns3.push("All");
-                            // this.charts[index].series[0].setData(series[0]);
-                            // this.charts[index].series[0].setData(series[0]);
-                            
-                            this.charts[index].addSeries(series[0]);
-                            this.charts[index].addSeries(series[1]);
-                        }
-                        // for(series.length){
-
-                        // }
-                        // this.charts[index].series[0].setData(series[0]);
+                    this.chartInit(id);
+                    this.drilldowns[id]=[];
+                    this.drilldowns[id].push("All");
+                    for(var i =0; i <series.length;i++)
+                        this.charts[id].addSeries(series[i]);
                         
         });
 }
-    createChart(name: string){
-        this.getChart(name);
-    }
-    options1: any;
-    chartName: any;
-    
     ngOnInit() {
-        // this.chartName = "inscan";
-        this.createChart("inscan");
-        this.createChart("inscan_percent");
-        this.createChart("inscan_booked_count");
+        this.drilldownsAdded = 0;
+        this.getChart("inscan");
+        this.getChart("inscan_percent");
+        this.getChart("inscan_booked_count");
 }
 }

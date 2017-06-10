@@ -7,7 +7,7 @@
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns; let last = last">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan']; let last = last">
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
@@ -30,7 +30,7 @@
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns2">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_percent']">
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
@@ -54,7 +54,7 @@
             </div>
             <div class="card-block">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns3">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_booked_count']">
                     <i>{{drill}}</i> 
                 </li>
                 <!--<li class="breadcrumb-item"><i></i> </li>-->
