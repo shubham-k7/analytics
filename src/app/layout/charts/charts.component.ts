@@ -136,6 +136,13 @@ export class ChartsComponent implements OnInit {
                                         enabled: true,
                                         format: '{point.y}'
                                     }
+                                },
+                                column: {
+                                    events: {
+                                        legendItemClick: function () {
+                                                        return false; 
+                                                        }
+                                    }
                                 }
                             },
                             series: [],
@@ -200,7 +207,18 @@ export class ChartsComponent implements OnInit {
                         this.charts[id].addSeries(series[i]);
                         
         });
-}
+    }
+    updateChart(id: string) {
+        this.chartDataService.getChart(id).subscribe(series => {
+            this.drilldowns[id]=[];
+            var chart = this.charts[id];
+            while(chart.series.length > 0)
+                chart.series[0].remove(true);
+            this.drilldowns[id].push("All");
+            for(var i =0; i <series.length;i++)
+                chart.addSeries(series[i]);
+        });
+    }
     ngOnInit() {
         this.drilldownsAdded = 0;
         this.getChart("inscan");
