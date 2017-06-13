@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import {HighchartsStatic} from 'angular2-highcharts/dist/HighchartsService';
 import { ChartModule} from 'angular2-highcharts';
 import { ChartComponent} from 'angular2-highcharts';
@@ -28,6 +28,7 @@ import { ChartDataService } from '../../shared/services/chart-data.service';
         CommonModule,
         ChartsRoutingModule,
         PageHeaderModule,
+        FormsModule,
         ChartModule
     ],
     declarations: [ChartsComponent],

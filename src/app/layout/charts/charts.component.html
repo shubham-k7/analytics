@@ -2,44 +2,43 @@
 <div class="row">
     <div class="col col-sm-6">
         <div class="card mb-3">
-            <div class="card-header">
-                Performance Inscan: Time 
+            <div class="card-header" *ngIf="filter['inscan_vs_booked']">
+                Performance Inscan: Time {{filter['inscan_vs_booked']['inscan_vs_booked-transition']}}
             </div>
-            <div class="card-block">
+            <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan']; let last = last">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_vs_booked']['inscan_vs_booked-transition']; let last = last">
                     <i>{{drill}}</i> 
                 </li>
                 <form class="form-inline my-2 my-lg-0" style="float: right;">
-             <input class="form-control mr-sm-2" type="text" placeholder="Filter">
+                <input class="form-control mr-sm-2" type="text" [(ngModel)]="filter['inscan_vs_booked']['inscan_vs_booked-transition']" name="filter1" placeholder="Filter">
             </form>
                 </ol>
-                <div id="inscan"></div>
+                <div id="inscan_vs_booked-transition"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="updateChart('inscan')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan')">Update</button>
             </div>
         </div>
-       
     </div>
-<div class="col col-sm-6">
+<div class="col col-sm-6" >
      <div class="card mb-3">
             <div class="card-header">
                 Performance Inscan: Inscan Percent
             </div>
-            <div class="card-block">
+            <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_percent']">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_vs_booked']['inscan_vs_booked-percentage']; let last = last">
                     <i>{{drill}}</i> 
                 </li>
                 <form class="form-inline my-2 my-lg-0" style="float: right;">
              <input class="form-control mr-sm-2" type="text" placeholder="Filter">
             </form>
                 </ol>
-                <div id="inscan_percent"></div>
+                <div id="inscan_vs_booked-percentage"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="updateChart('inscan_percent')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan_percent')">Update</button>
             </div>
         </div>
     </div>
@@ -50,19 +49,19 @@
             <div class="card-header">
                 Performance Inscan Vs Booked
             </div>
-            <div class="card-block">
+            <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_booked_count']">
+                <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_vs_booked']['inscan_vs_booked-comparison']">
                     <i>{{drill}}</i> 
                 </li>
                 <form class="form-inline my-2 my-lg-0" style="float: right;">
              <input class="form-control mr-sm-2" type="text" placeholder="Filter">
             </form>
                 </ol>
-                <div id="inscan_booked_count"></div>
+                <div id="inscan_vs_booked-comparison"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="updateChart('inscan_booked_count')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan_booked_count')">Update</button>
             </div>
         </div>
     </div>

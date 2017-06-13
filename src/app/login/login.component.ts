@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
     constructor(public router: Router,
                 private authenticationService: AuthenticationService) { }
 
-    ngOnInit() { this.error=''; console.log("fdas");}
+    ngOnInit() { this.error='';}
 
     login() {
         // console.log(this.model.username);
@@ -23,12 +23,12 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.model.username,this.model.password)
             .subscribe(result => {
                     if(result===true){
-                        console.log("Logged IN");
+                        // console.log("Logged IN");
                         this.router.navigate(['/dashboard']);
                     }
                     else
                     {
-                        console.log("Not valid authentication");
+                        // console.log("Not valid authentication");
                         this.error="Invalid Credentials";
                         // console.log(this.error) 
                     }

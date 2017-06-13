@@ -18,14 +18,10 @@ export class AuthGuard implements CanActivate, CanDeactivate<boolean>{
     }
 
     canDeactivate() {
-        // console.log("reached CanDeactivate");
         if (sessionStorage.getItem('currentUser')) {
             this.router.navigate['/dashboard'];
-            console.log("reached if");
-            // this.router.navigate(['/dashboard']);
             return true;
         }
-        console.log("reached false");
         return false;
     }
 }
