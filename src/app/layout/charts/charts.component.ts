@@ -30,7 +30,7 @@ export class ChartsComponent implements OnInit {
             console.log(event.point.series.name);
             var temp = {name: event.point.name,
                         series_name: event.point.series.name,
-                        report_type: t+1,
+                        report_type: t.toString(),
                         chartName: chartName,
                         version_ids: [abc],
                         kpi_id: kpi_name};
@@ -44,10 +44,11 @@ export class ChartsComponent implements OnInit {
                         chart.addSingleSeriesAsDrilldown(event.point,series[0]);
                         comp.drilldownsAdded++;
                         if(comp.drilldownsAdded===event.points.length) {
-                            var n = temp.name.split('_');
+                            // var n = temp.name.split('_');
+                            // console.log(temp.name);`
                             comp.drilldownsAdded=0;
                             chart.applyDrilldown();
-                            comp.drilldowns[temp.kpi_id][chartName].push(n[0]);
+                            comp.drilldowns[temp.kpi_id][chartName].push(temp.name);
                         }
                     }
                     else{
@@ -79,11 +80,11 @@ export class ChartsComponent implements OnInit {
             this.kpilist[id.split('-')[0]][id].showLoading("Fetching Data...")
             this.chartDataService.getChart(id).subscribe(data => {
                     var kpi_name = id.split('-')[0];
-                    console.log(data);
+                    // console.log(data);
                     var series = data[0].data;
-                    console.log(series);
+                    // console.log(series);
                     var chartid = this.chartInit(kpi_name,data[0].conf);
-                    console.log(chartid);
+                    // console.log(chartid);
                     this.drilldowns[kpi_name][chartid]=[];
                     this.drilldowns[kpi_name][chartid].push("All");
                     for(var i =0; i <series.length;i++)
@@ -99,12 +100,11 @@ export class ChartsComponent implements OnInit {
                 this.drilldowns[kpi.kpi_name][chartid].push("All");
                 this.filter[kpi.kpi_name][chartid] = '';
                 for(var i =0; i<chart.data.length;i++){
-                    console.log(chart.data[i]);
                     this.kpilist[kpi.kpi_name][chartid].addSeries(chart.data[i]);
                 }
             }
-            console.log(this.kpilist);
-            console.log(this.drilldowns);
+            // console.log(this.kpilist);
+            // console.log(this.drilldowns);
         });
     }
     
@@ -114,7 +114,6 @@ export class ChartsComponent implements OnInit {
             for(var kpi of kpis){
                 name=kpi.kpi_name;
                 this.kpilist[name] = kpi.versions;
-                console.log(kpi);
                 this.getCharts(kpi);
                 this.kpilist[kpi.kpi_name] = new Map<string,any>();
                 this.drilldowns[kpi.kpi_name] = new Map<string,string[]>();
