@@ -27,12 +27,14 @@ export class ChartsComponent implements OnInit {
             var kpi_name = chartName.split('-')[0];
             var abc = chartName.split('-')[1];
             t = this.drilldowns[kpi_name][chartName].length;
-            var temp = {name: event.point.id,
+            console.log(event.point.series.name);
+            var temp = {name: event.point.name,
+                        series_name: event.point.series.name,
                         report_type: t+1,
                         chartName: chartName,
                         version_ids: [abc],
                         kpi_id: kpi_name};
-            console.log(temp);
+            // console.log(temp);
             this.chartDataService.getChartData(temp).subscribe(series => {
                     var chart;
                     chart = comp.kpilist[temp.kpi_id][chartName];
@@ -51,9 +53,6 @@ export class ChartsComponent implements OnInit {
                     else{
                         chart.addSingleSeriesAsDrilldown(event.point,series[0]);
                         chart.applyDrilldown();
-                        // //console.log(chartName);
-                        //console.log(comp.drilldowns);
-                        //console.log(event);
                         comp.drilldowns[temp.kpi_id][chartName].push(event.point.name);
                     }
             },
@@ -70,25 +69,30 @@ export class ChartsComponent implements OnInit {
     chartInit(kpi_name: string,conf: any): string{
         var comp = this;
         var data = eval('(' + conf + ')')
-        console.log(data);
+        // console.log(data);
         var chart = new Highcharts.Chart(data);
+        // chart.
         this.kpilist[kpi_name][data.chart.name]=chart;
         return data.chart.name;
     }
     getChart(id: string) {
-            this.chartDataService.getChart(id).subscribe(series => {
+            this.kpilist[id.split('-')[0]][id].showLoading("Fetching Data...")
+            this.chartDataService.getChart(id).subscribe(data => {
                     var kpi_name = id.split('-')[0];
-                    var confs = this.kpilist[kpi_name][id].options;
-                    this.chartInit(kpi_name,confs);
-                    this.drilldowns[kpi_name][id]=[];
-                    this.drilldowns[kpi_name][id].push("All");
+                    console.log(data);
+                    var series = data[0].data;
+                    console.log(series);
+                    var chartid = this.chartInit(kpi_name,data[0].conf);
+                    console.log(chartid);
+                    this.drilldowns[kpi_name][chartid]=[];
+                    this.drilldowns[kpi_name][chartid].push("All");
                     for(var i =0; i <series.length;i++)
                         this.kpilist[kpi_name][id].addSeries(series[i]);
         });
     }
     getCharts(kpi: any) {
         this.chartDataService.getCharts(kpi).subscribe(data => {
-            var chartid;
+            var chartid;    
             for(var chart of data){
                 chartid = this.chartInit(kpi.kpi_name,chart.conf);
                 this.drilldowns[kpi.kpi_name][chartid]=[];

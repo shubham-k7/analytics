@@ -51,10 +51,12 @@ export class ChartDataService {
         var kpi_name = id.split('-')[0];
         var versions = id.split('-')[1];
         var payload = JSON.stringify({kpi_id: kpi_name,version_ids: [versions]});
-        return this.http.post(url, JSON.stringify({ report_type: name}),options).map(this.extractData).catch(this.handleError);
+        console.log(payload);
+        return this.http.post(url,payload,options).map(this.extractData).catch(this.handleError);
     }
 
     getChartData(temp: any): Observable<any> {
+        console.log(temp);
         var url = 'http://52.70.207.115:8087/api/v1/inscan/report/';
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');

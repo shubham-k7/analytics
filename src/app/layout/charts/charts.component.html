@@ -3,7 +3,7 @@
     <div class="col col-sm-6">
         <div class="card mb-3">
             <div class="card-header" *ngIf="filter['inscan_vs_booked']">
-                Performance Inscan: Time {{filter['inscan_vs_booked']['inscan_vs_booked-transition']}}
+                KPI: Inscan vs Booked, Avg Time <span>{{filter['inscan_vs_booked']['inscan_vs_booked-transition']}} </span>
             </div>
             <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
@@ -17,14 +17,14 @@
                 <div id="inscan_vs_booked-transition"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="getChart('inscan')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan_vs_booked-transition')">Refresh</button>
             </div>
         </div>
     </div>
 <div class="col col-sm-6" >
      <div class="card mb-3">
             <div class="card-header">
-                Performance Inscan: Inscan Percent
+                KPI: Inscan vs Booked, Inscan Percentage
             </div>
             <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
@@ -38,7 +38,7 @@
                 <div id="inscan_vs_booked-percentage"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="getChart('inscan_percent')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan_vs_booked-percentage')">Refresh</button>
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@
 <div class="col col-sm-6">
     <div class="card mb-3">
             <div class="card-header">
-                Performance Inscan Vs Booked
+                KPI: Inscan vs Booked, Count
             </div>
             <div class="card-block" *ngIf="drilldowns['inscan_vs_booked']">
                 <ol class="breadcrumb">
@@ -61,7 +61,7 @@
                 <div id="inscan_vs_booked-comparison"></div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-info btn-sm" (click)="getChart('inscan_booked_count')">Update</button>
+                <button class="btn btn-info btn-sm" (click)="getChart('inscan_vs_booked-comparison')">Refresh</button>
             </div>
         </div>
     </div>
