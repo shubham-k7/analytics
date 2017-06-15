@@ -27,8 +27,10 @@ export class ChartsComponent implements OnInit {
             var kpi_name = chartName.split('-')[0];
             var abc = chartName.split('-')[1];
             t = this.drilldowns[kpi_name][chartName].length;
-            console.log(event.point.series.name);
-            var temp = {name: event.point.name,
+            var list = this.drilldowns[kpi_name][chartName].slice(1,t+1);
+            list.push(event.point.name);
+            // console.log(list);
+            var temp = {name: list,
                         series_name: event.point.series.name,
                         report_type: t.toString(),
                         chartName: chartName,
@@ -48,7 +50,7 @@ export class ChartsComponent implements OnInit {
                             // console.log(temp.name);`
                             comp.drilldownsAdded=0;
                             chart.applyDrilldown();
-                            comp.drilldowns[temp.kpi_id][chartName].push(temp.name);
+                            comp.drilldowns[temp.kpi_id][chartName].push(temp.name.slice(-1)[0]);
                         }
                     }
                     else{
@@ -77,14 +79,12 @@ export class ChartsComponent implements OnInit {
         return data.chart.name;
     }
     getChart(id: string) {
-            this.kpilist[id.split('-')[0]][id].showLoading("Fetching Data...")
+            var kpi_name = id.split('-')[0]; 
+            this.kpilist[kpi_name][id].showLoading("Fetching Data...")
             this.chartDataService.getChart(id).subscribe(data => {
                     var kpi_name = id.split('-')[0];
-                    // console.log(data);
                     var series = data[0].data;
-                    // console.log(series);
                     var chartid = this.chartInit(kpi_name,data[0].conf);
-                    // console.log(chartid);
                     this.drilldowns[kpi_name][chartid]=[];
                     this.drilldowns[kpi_name][chartid].push("All");
                     for(var i =0; i <series.length;i++)
