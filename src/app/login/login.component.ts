@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { Message } from 'primeng/primeng';
 
 import { AuthenticationService } from '../shared/guard/authentication.service';
 @Component({
@@ -10,12 +10,12 @@ import { AuthenticationService } from '../shared/guard/authentication.service';
 })
 export class LoginComponent implements OnInit {
     model: any  = {};
-    error = '';
-    // error: string;
+    error: Message[] = [];
+
     constructor(public router: Router,
                 private authenticationService: AuthenticationService) { }
 
-    ngOnInit() { this.error='';}
+    ngOnInit() { this.error=[];}
 
     login() {
         // console.log(this.model.username);
@@ -23,21 +23,21 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.model.username,this.model.password)
             .subscribe(result => {
                     if(result===true){
-                        // console.log("Logged IN");
+                        this.error=[];
+                        this.error.push({severity:'success', summary:'Success: ', detail:'Welcome to Analytics!'});
+                        // setTimeout(400);    
                         this.router.navigate(['/dashboard']);
                     }
                     else
-                    {
-                        // console.log("Not valid authentication");
-                        this.error="Invalid Credentials";
-                        // console.log(this.error) 
+                    { 
+                        this.error=[];
+                        this.error.push({severity:'error', summary:'Error: ', detail:'Validation failed!'}) 
                     }
                 },
                  (err) => {
-                    this.error="Invalid Credentials.";
+                     this.error=[];
+                        this.error.push({severity:'error', summary:'Error: ', detail:'Validation failed!'})                     
                  });
-        
-        // localStorage.setItem('isLoggedin', 'true');
     }
 
 }

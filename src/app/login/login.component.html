@@ -16,15 +16,11 @@
                 <a [class.disabled]="!model.username || !model.password" class="btn rounded-btn" (click)="login()"> Log in </a>
                 &nbsp;
                 <!--<a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>-->
-                <br><br><br><div *ngIf="error" class="alert alert-danger">
-    <strong>{{error}}</strong> Try Again!</div>
-                
-                <!--<div *ngIf="error" >{{ error }}</div>-->
+                <!--<br><br><br><div *ngIf="error" class="alert alert-danger">-->
+    <!--<strong>{{error}}</strong> Try Again!</div>-->
             </form>
+            <br>
+            <p-messages [(value)]="error"></p-messages>
         </div>
-<!--<div *ngIf="model.username || model.password">
-    {{ model.username + ":" + model.password }}
-    <!--[class.disabled]="!model.username || !model.password"-->
-<!--</div>-->
     </div>
 </div>

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartComponent } from 'angular2-highcharts';
 import { Observable } from 'rxjs/Rx';
-
+import { MenuItem } from 'primeng/components/common/api';
+import { Message } from 'primeng/components/common/api';
 import { ChartDataService } from '../../shared/services/chart-data.service';
+import {SelectItem} from 'primeng/primeng';
 
 declare var require: any;
 var Highcharts = require('highcharts/highcharts');
@@ -17,80 +19,69 @@ HighchartsDrilldown(Highcharts);
     styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent implements OnInit {
-
-    constructor(private chartDataService: ChartDataService){ }
     
-    drilldownsAdded = 0;
+    constructor(private chartDataService: ChartDataService){ }
     public getChartData(event: any,chartName: string): void {
-            var comp=this;
-            var t;
-            var kpi_name = chartName.split('-')[0];
-            var abc = chartName.split('-')[1];
+            var comp=this,t;
+            var x = chartName.split('-').slice(0,2);
+            var kpi_name = x[0];
+            var abc = x[1];
             t = this.drilldowns[kpi_name][chartName].length;
             var list = this.drilldowns[kpi_name][chartName].slice(1,t+1);
             list.push(event.point.name);
-            // console.log(list);
+            // PAYLOAD for charts, name is a list of filters
             var temp = {name: list,
                         series_name: event.point.series.name,
                         report_type: t.toString(),
                         chartName: chartName,
                         version_ids: [abc],
                         kpi_id: kpi_name};
-            // console.log(temp);
             this.chartDataService.getChartData(temp).subscribe(series => {
-                    var chart;
-                    chart = comp.kpilist[temp.kpi_id][chartName];
-                    chart.hideLoading();
-                    if(event.points)
-                    {
-                        chart.addSingleSeriesAsDrilldown(event.point,series[0]);
-                        comp.drilldownsAdded++;
-                        if(comp.drilldownsAdded===event.points.length) {
-                            // var n = temp.name.split('_');
-                            // console.log(temp.name);`
-                            comp.drilldownsAdded=0;
-                            chart.applyDrilldown();
-                            comp.drilldowns[temp.kpi_id][chartName].push(temp.name.slice(-1)[0]);
-                        }
-                    }
-                    else{
-                        chart.addSingleSeriesAsDrilldown(event.point,series[0]);
+                var chart;
+                chart = comp.kpilist[temp.kpi_id][chartName];
+                chart.hideLoading();
+                if(event.points)
+                {
+                    console.log(chart.options.drilldown.series);
+                    chart.addSingleSeriesAsDrilldown(event.point,series[0]);
+                    comp.drilldownsAdded++;
+                    if(comp.drilldownsAdded===event.points.length) {
+                        comp.drilldownsAdded=0;
                         chart.applyDrilldown();
-                        comp.drilldowns[temp.kpi_id][chartName].push(event.point.name);
+                        comp.drilldowns[temp.kpi_id][chartName].push(temp.name.slice(-1)[0]);
                     }
+                }
             },
             (err) => {
-                //console.log("ERROR occured");
+                alert(err);
                 this.kpilist[temp.kpi_id][temp.chartName].hideLoading();
-            }
+        }
         );
     }
-    kpilist: Map<string,any> = new Map();
-    charts: Map<string,any> = new Map();
-    drilldowns: Map<string,any> = new Map();
-    filter: Map<string,any> = new Map();
     chartInit(kpi_name: string,conf: any): string{
-        var comp = this;
+        var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
         var data = eval('(' + conf + ')')
-        // console.log(data);
         var chart = new Highcharts.Chart(data);
-        // chart.
         this.kpilist[kpi_name][data.chart.name]=chart;
+        chart.options.drilldown.activeDataLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
+        chart.options.drilldown.activeAxisLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         return data.chart.name;
     }
+
     getChart(id: string) {
-            var kpi_name = id.split('-')[0]; 
-            this.kpilist[kpi_name][id].showLoading("Fetching Data...")
-            this.chartDataService.getChart(id).subscribe(data => {
-                    var kpi_name = id.split('-')[0];
-                    var series = data[0].data;
-                    var chartid = this.chartInit(kpi_name,data[0].conf);
-                    this.drilldowns[kpi_name][chartid]=[];
-                    this.drilldowns[kpi_name][chartid].push("All");
-                    for(var i =0; i <series.length;i++)
-                        this.kpilist[kpi_name][id].addSeries(series[i]);
+        var kpi_name = id.split('-')[0]; 
+        this.kpilist[kpi_name][id].showLoading("Fetching Data...")
+        this.chartDataService.getChart(id).subscribe(data => {
+            var kpi_name = id.split('-')[0];
+            var series = data[0].data;
+            var chartid = this.chartInit(kpi_name,data[0].conf);
+            this.drilldowns[kpi_name][chartid]=[];
+            this.drilldowns[kpi_name][chartid].push("All");
+            for(var i =0; i <series.length;i++)
+                this.kpilist[kpi_name][id].addSeries(series[i]);
         });
     }
+
     getCharts(kpi: any) {
         this.chartDataService.getCharts(kpi).subscribe(data => {
             var chartid;    
@@ -118,16 +109,17 @@ export class ChartsComponent implements OnInit {
                 this.kpilist[kpi.kpi_name] = new Map<string,any>();
                 this.drilldowns[kpi.kpi_name] = new Map<string,string[]>();
                 this.filter[kpi.kpi_name] = new Map<string,string>();
+                
            }
-           
         });
     }
+
+    drilldownsAdded = 0;
+    kpilist: Map<string,any> = new Map();
+    drilldowns: Map<string,any> = new Map();
+    filter: Map<string,any> = new Map();
     ngOnInit() {
-        
         this.drilldownsAdded = 0;
         this.getKPIs();
-        /*this.getChart("inscan");
-        this.getChart("inscan_percent");
-        this.getChart("inscan_booked_count");*/
-}
+    }
 }
