@@ -13,7 +13,7 @@ export function highchartsFactory() {
     const hc = require('highcharts');
     const hcm = require('highcharts/highcharts-more');
     const dd = require('highcharts/modules/drilldown');
-    // hcm(hc);
+    hcm(hc);
     dd(hc);
     return hc;
 }

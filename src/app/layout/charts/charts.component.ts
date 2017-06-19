@@ -58,6 +58,7 @@ export class ChartsComponent implements OnInit {
         }
         );
     }
+
     chartInit(kpi_name: string,conf: any): string{
         var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
         var data = eval('(' + conf + ')')
@@ -79,12 +80,17 @@ export class ChartsComponent implements OnInit {
             this.drilldowns[kpi_name][chartid].push("All");
             for(var i =0; i <series.length;i++)
                 this.kpilist[kpi_name][id].addSeries(series[i]);
-        });
+        },
+        (err) => {
+            alert(err);
+        }
+        );
     }
 
     getCharts(kpi: any) {
         this.chartDataService.getCharts(kpi).subscribe(data => {
-            var chartid;    
+            var chartid;
+            // for each chart in data, Init chart, add Mappings to chart, add series to chart
             for(var chart of data){
                 chartid = this.chartInit(kpi.kpi_name,chart.conf);
                 this.drilldowns[kpi.kpi_name][chartid]=[];
@@ -96,21 +102,26 @@ export class ChartsComponent implements OnInit {
             }
             // console.log(this.kpilist);
             // console.log(this.drilldowns);
+        },
+        (err) => {
+            alert(err);
         });
     }
     
     getKPIs() {
         this.chartDataService.getKPIs().subscribe(res => {
             var kpis = res['data'],name;
+            // for each kpi, create kpilist map, getCharts for each KPI. filter charts on kpi.version(Chartlists)
             for(var kpi of kpis){
                 name=kpi.kpi_name;
-                this.kpilist[name] = kpi.versions;
                 this.getCharts(kpi);
                 this.kpilist[kpi.kpi_name] = new Map<string,any>();
                 this.drilldowns[kpi.kpi_name] = new Map<string,string[]>();
                 this.filter[kpi.kpi_name] = new Map<string,string>();
-                
            }
+        },
+        (err)=>{
+            alert(err);
         });
     }
 

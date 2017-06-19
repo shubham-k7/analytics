@@ -15,17 +15,18 @@ export class AuthenticationService {
     }
  
     isLogged(): any {
-        return this.isLogged;
+        return this.isLoggedIn;
     }
 
     login(username: string, password: string): Observable<boolean> {
+
         let headers = new Headers({'content-type': 'application/json'});
         let options = new RequestOptions({ headers: headers});
         return this.http.post('http://zastapi.prtouch.com/api/authentication/token/', JSON.stringify({ username: username, password: password }),options)//,new RequestOptions({headers: new Headers()}))
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
-               this.isLoggedIn=true;
-                if(response.json()['success']==true)
+            //    this.isLoggedIn=true;
+                if(response.json()['success']===true)
                 {
                     let token = response.json()['data']['auth_key'];
                     console.log(token);
@@ -38,7 +39,6 @@ export class AuthenticationService {
                     // return false to indicate failed login
                     return false;
                 }
-                // return true;
             });
 
     }
