@@ -25,6 +25,7 @@ HighchartsExportData(Highcharts);
 export class ChartsComponent implements OnInit {
     
     constructor(private chartDataService: ChartDataService){ }
+
     public getChartData(event: any,chartName: string): void {
             var comp=this,t;
             var x = chartName.split('-').slice(0,2);
@@ -51,6 +52,8 @@ export class ChartsComponent implements OnInit {
                     if(comp.drilldownsAdded===event.points.length) {
                         comp.drilldownsAdded=0;
                         chart.applyDrilldown();
+                        if(chart.insertedTable)
+                            chart.viewData();
                         comp.drilldowns[payload.kpi_id][chartName].push(payload.name.slice(-1)[0]);
                     }
                 }
@@ -69,6 +72,34 @@ export class ChartsComponent implements OnInit {
         this.kpilist[kpi_name][data.chart.name]=chart;
         chart.options.drilldown.activeDataLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         chart.options.drilldown.activeAxisLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
+        chart.options.drilldown.drillUpButton = {
+                relativeTo: 'chart',
+                position: {
+                    align: "right",
+                    y: 6,
+                    x: -50
+                },
+                theme: {
+                    fill: 'white',
+                    'stroke-width': 1,
+                    stroke: 'silver',
+                    opacity: 0.5,
+                    r: 0,
+                    states: {
+                        hover: {
+                            fill: '#41739D',
+                            style: {
+							    color: "white"
+						    },
+                            opacity: 1
+                        },
+                        select: {
+                            stroke: '#039',
+                            fill: '#bada55'
+                        }
+                    }
+                }
+            };
         return data.chart.name;
     }
 
@@ -76,7 +107,7 @@ export class ChartsComponent implements OnInit {
         var kpi_name = id.split('-')[0]; 
         var chart = this.kpilist[kpi_name][id]; 
         chart.showLoading("Fetching Data...")
-        chart.hideData();
+        // chart.hideData();
         this.chartDataService.getChart(id).subscribe(data => {
             var kpi_name = id.split('-')[0];
             var series = data[0].data;
@@ -86,6 +117,7 @@ export class ChartsComponent implements OnInit {
             var chart= this.kpilist[kpi_name][id];
             for(var i =0; i <series.length;i++)
                 chart.addSeries(series[i]);
+            chart.viewData();
         },
         (err) => {
             alert(err);
