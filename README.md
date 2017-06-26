@@ -12,4 +12,4 @@ Now, we can start the program using
 ```
 npm start
 ```
-After successful execution, you'll find the project running at [localhost:4200](http://0.0.0.0:4200)
+After successful execution, you'll find the project running at [localhost:4200](http://localhost:4200)
