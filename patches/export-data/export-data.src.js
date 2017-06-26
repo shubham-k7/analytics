@@ -361,7 +361,7 @@
          * View the data in a table below the chart
          */
        Highcharts.Chart.prototype.viewData = function() {
-            if (!this.dataTableDiv) {
+            if (!this.dataTableDiv && !this.insertedTable) {
                 this.dataTableDiv = doc.createElement('div');
                 this.dataTableDiv.className = 'highcharts-data-table';
                 this.insertedTable = true;
@@ -405,6 +405,7 @@
             }, {
                 textKey: 'viewData',
                 onclick: function() {
+                    // this.hideData();
                     this.viewData();
                 }
             }, {

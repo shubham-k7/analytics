@@ -1,1 +1,0 @@
-Add this file to the folder "node_modules/highcharts/modules/" as "exporting.src.js"

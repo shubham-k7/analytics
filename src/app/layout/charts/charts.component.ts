@@ -10,7 +10,7 @@ declare var require: any;
 var Highcharts = require('highcharts/highcharts');
 var HighchartsMore = require('highcharts/highcharts-more');
 var HighchartsDrilldown = require('highcharts/modules/drilldown');
-var HighchartsExporting = require('highcharts/modules/exporting');
+var HighchartsExporting = require('highcharts/modules/exporting.src');
 var HighchartsExportData = require('highcharts/modules/export-data.src');
 HighchartsMore(Highcharts);
 HighchartsDrilldown(Highcharts);
@@ -117,7 +117,8 @@ export class ChartsComponent implements OnInit {
             var chart= this.kpilist[kpi_name][id];
             for(var i =0; i <series.length;i++)
                 chart.addSeries(series[i]);
-            chart.viewData();
+            if(chart.insertedTable)
+                chart.viewData();
         },
         (err) => {
             alert(err);
