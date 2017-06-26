@@ -10,8 +10,12 @@ declare var require: any;
 var Highcharts = require('highcharts/highcharts');
 var HighchartsMore = require('highcharts/highcharts-more');
 var HighchartsDrilldown = require('highcharts/modules/drilldown');
+var HighchartsExporting = require('highcharts/modules/exporting');
+var HighchartsExportData = require('highcharts/modules/export-data.src');
 HighchartsMore(Highcharts);
 HighchartsDrilldown(Highcharts);
+HighchartsExporting(Highcharts);
+HighchartsExportData(Highcharts);
 
 @Component({
     selector: 'app-charts',
@@ -29,32 +33,31 @@ export class ChartsComponent implements OnInit {
             t = this.drilldowns[kpi_name][chartName].length;
             var list = this.drilldowns[kpi_name][chartName].slice(1,t+1);
             list.push(event.point.name);
-            // PAYLOAD for charts, name is a list of filters
-            var temp = {name: list,
+            // PAYLOAD for charts, name is a list of filters for charts
+            var payload = {name: list,
                         series_name: event.point.series.name,
                         report_type: t.toString(),
                         chartName: chartName,
                         version_ids: [abc],
                         kpi_id: kpi_name};
-            this.chartDataService.getChartData(temp).subscribe(series => {
+            this.chartDataService.getChartData(payload).subscribe(series => {
                 var chart;
-                chart = comp.kpilist[temp.kpi_id][chartName];
+                chart = comp.kpilist[payload.kpi_id][chartName];
                 chart.hideLoading();
                 if(event.points)
                 {
-                    console.log(chart.options.drilldown.series);
                     chart.addSingleSeriesAsDrilldown(event.point,series[0]);
                     comp.drilldownsAdded++;
                     if(comp.drilldownsAdded===event.points.length) {
                         comp.drilldownsAdded=0;
                         chart.applyDrilldown();
-                        comp.drilldowns[temp.kpi_id][chartName].push(temp.name.slice(-1)[0]);
+                        comp.drilldowns[payload.kpi_id][chartName].push(payload.name.slice(-1)[0]);
                     }
                 }
             },
             (err) => {
                 alert(err);
-                this.kpilist[temp.kpi_id][temp.chartName].hideLoading();
+                this.kpilist[payload.kpi_id][payload.chartName].hideLoading();
         }
         );
     }
@@ -71,15 +74,18 @@ export class ChartsComponent implements OnInit {
 
     getChart(id: string) {
         var kpi_name = id.split('-')[0]; 
-        this.kpilist[kpi_name][id].showLoading("Fetching Data...")
+        var chart = this.kpilist[kpi_name][id]; 
+        chart.showLoading("Fetching Data...")
+        chart.hideData();
         this.chartDataService.getChart(id).subscribe(data => {
             var kpi_name = id.split('-')[0];
             var series = data[0].data;
             var chartid = this.chartInit(kpi_name,data[0].conf);
             this.drilldowns[kpi_name][chartid]=[];
             this.drilldowns[kpi_name][chartid].push("All");
+            var chart= this.kpilist[kpi_name][id];
             for(var i =0; i <series.length;i++)
-                this.kpilist[kpi_name][id].addSeries(series[i]);
+                chart.addSeries(series[i]);
         },
         (err) => {
             alert(err);

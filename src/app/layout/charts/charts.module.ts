@@ -13,8 +13,12 @@ export function highchartsFactory() {
     const hc = require('highcharts');
     const hcm = require('highcharts/highcharts-more');
     const dd = require('highcharts/modules/drilldown');
+    const hce = require('highcharts/modules/exporting');
+    const hced = require('highcharts/modules/export-data.src');
     hcm(hc);
     dd(hc);
+    hce(hc);
+    hced(hc);
     return hc;
 }
 // import {MultiSelectModule} from 'primeng/primeng';
