@@ -7,8 +7,9 @@ git clone https://github.com/shubham-k7/analytics.git
 cd analytics
 npm install
 ```
-After the dependicies are installed, start the project
+After the dependicies are installed, fix the patched files from [patches](https://github.com/shubham-k7/analytics/tree/master/patches) into the **node_modules** folder into their **respective** modules.
+Now, we can start the program using
 ```
 npm start
 ```
-You'll find the Project running at [localhost:4200](http://0.0.0.0:4200)
+After successful execution, you'll find the project running at [localhost:4200](http://0.0.0.0:4200)
