@@ -29,7 +29,6 @@ export class AuthenticationService {
                 if(response.json()['success']===true)
                 {
                     let token = response.json()['data']['auth_key'];
-                    console.log(token);
                     this.token = token;
                     sessionStorage.setItem('currentUser', JSON.stringify({ data: response.json()['data'], token: token }));
                     // return true to indicate successful login
