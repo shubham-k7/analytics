@@ -43,13 +43,14 @@ export class ChartDataService {
         return this.http.post(url,payload,options).map(this.extractData).catch(this.handleError);
         
     }
-    getChart(id: string): Observable<any> {
+    getChart(id: string,df: any): Observable<any> {
         var url = 'http://52.70.207.115:8087/api/v1/inscan/report/';
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
         let options = new RequestOptions({ headers: headers});
         var x = id.split('-');
-        var payload = JSON.stringify({kpi_id: x[0],version_ids: [x[1]],report_type: "0",name: [],series_name: ""});
+        var payload = JSON.stringify({kpi_id: x[0],version_ids: [x[1]],report_type: "0",name: [],series_name: "",datef: (df)?df:null});
+        console.log(payload);
         return this.http.post(url,payload,options).map(this.extractData).catch(this.handleError);
     }
 

@@ -29,6 +29,10 @@ import { ChartsRoutingModule } from './charts-routing.module';
 import { ChartsComponent } from './charts.component';
 import { PageHeaderModule } from '../../shared';
 import { ChartDataService } from '../../shared/services/chart-data.service';
+import { MdSelectModule } from '@angular/material';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
+import {MdDatepickerModule,MdNativeDateModule, MdInputModule} from '@angular/material';
+import { Md2Module } from 'md2';
 
 @NgModule({
     imports: [
@@ -39,7 +43,13 @@ import { ChartDataService } from '../../shared/services/chart-data.service';
         ChartModule,
         AutoCompleteModule,
         GrowlModule,
-        BreadcrumbModule
+        BreadcrumbModule,
+        MdSelectModule,
+        CalendarModule,
+        MdDatepickerModule,
+        MdNativeDateModule,
+        MdInputModule,
+        Md2Module,
     ],
     declarations: [ChartsComponent],
     providers: [ChartDataService,{

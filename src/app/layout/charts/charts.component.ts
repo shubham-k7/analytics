@@ -4,14 +4,16 @@ import { Observable } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/components/common/api';
 import { Message } from 'primeng/components/common/api';
 import { ChartDataService } from '../../shared/services/chart-data.service';
-import {SelectItem} from 'primeng/primeng';
-
+import { SelectItem } from 'primeng/primeng';
+import { DateAdapter } from '@angular/material';
 declare var require: any;
 var Highcharts = require('highcharts/highcharts');
 var HighchartsMore = require('highcharts/highcharts-more');
 var HighchartsDrilldown = require('highcharts/modules/drilldown');
 var HighchartsExporting = require('highcharts/modules/exporting.src');
 var HighchartsExportData = require('highcharts/modules/export-data.src');
+import { DateLocale } from 'md2';
+import { Month } from '../../../assets/i18n/month';
 HighchartsMore(Highcharts);
 HighchartsDrilldown(Highcharts);
 HighchartsExporting(Highcharts);
@@ -24,7 +26,11 @@ HighchartsExportData(Highcharts);
 })
 export class ChartsComponent implements OnInit {
     
-    constructor(private chartDataService: ChartDataService){ }
+    
+    constructor(private chartDataService: ChartDataService, 
+    private myDate: DateLocale){
+        this.myDate.months = Month;
+    }
 
     public getChartData(event: any,chartName: string): void {
             var comp=this,t;
@@ -64,7 +70,17 @@ export class ChartsComponent implements OnInit {
         }
         );
     }
-
+    selectedvalue: any;
+    options = [
+        {id: 0, value: 'Default'},
+        {id: 1, value: 'Month'},
+        {id: 2, value: 'Range'}
+    ];
+    picker: null;
+    mon: Date;
+    update(event) { 
+        console.log(event);
+    }
     chartInit(kpi_name: string,conf: any): string{
         var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
         var data = eval('(' + conf + ')')
@@ -102,13 +118,31 @@ export class ChartsComponent implements OnInit {
             };
         return data.chart.name;
     }
-
+    _maxDate: Date;
+    setMaxDate() {
+        var temp = new Date(this.sDate);
+        temp.setDate(temp.getDate() + 31);
+        this._maxDate = temp;
+    }
     getChart(id: string) {
+        var df;
+        if(this.mon){
+            df = {dftype: this.selectedvalue.id,d1: new Date(this.mon).toLocaleDateString('en-IN').split('/').splice(1).toString()};
+        }
+        else if(this.sDate && this.eDate){
+            var d1 = new Date(this.sDate).toLocaleDateString('en-IN');
+            var d2 = new Date(this.eDate).toLocaleDateString('en-IN');
+            df = {dftype: this.selectedvalue.id,d1: d1,d2: d2};
+        }
+        else df = null;
         var kpi_name = id.split('-')[0]; 
         var chart = this.kpilist[kpi_name][id]; 
         chart.showLoading("Fetching Data...")
+        var check = null;
+        if(chart.insertedTable && chart.insertedTableID)
+            check = chart.insertedTableID;
         // chart.hideData();
-        this.chartDataService.getChart(id).subscribe(data => {
+        this.chartDataService.getChart(id,df).subscribe(data => {
             var kpi_name = id.split('-')[0];
             var series = data[0].data;
             var chartid = this.chartInit(kpi_name,data[0].conf);
@@ -117,15 +151,18 @@ export class ChartsComponent implements OnInit {
             var chart= this.kpilist[kpi_name][id];
             for(var i =0; i <series.length;i++)
                 chart.addSeries(series[i]);
-            if(chart.insertedTable)
+            if(check){
+                chart.insertedTable=true;
+                chart.insertedTableID = check;
+                chart.hideData();
                 chart.viewData();
+            }
         },
         (err) => {
             alert(err);
         }
         );
     }
-
     getCharts(kpi: any) {
         this.chartDataService.getCharts(kpi).subscribe(data => {
             var chartid;
@@ -163,11 +200,20 @@ export class ChartsComponent implements OnInit {
             alert(err);
         });
     }
-
+    sDate: Date;
+    eDate: Date;
     drilldownsAdded = 0;
     kpilist: Map<string,any> = new Map();
     drilldowns: Map<string,any> = new Map();
     filter: Map<string,any> = new Map();
+
+    selection(event) {
+        if(event.id===0){
+            delete this.mon;
+            delete this.sDate;
+            delete this.eDate;
+        }          
+    }
     ngOnInit() {
         this.drilldownsAdded = 0;
         this.getKPIs();

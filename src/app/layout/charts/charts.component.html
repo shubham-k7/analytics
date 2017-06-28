@@ -11,11 +11,48 @@
                 <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_vs_booked']['inscan_vs_booked-transition']; let last = last">
                     <i (click)="clickable">{{drill}}</i>    
                 </li>
-                <form class="form-inline my-2 my-lg-0" style="float: right;">
-                <!--<p-multiSelect [options]="levels" [(ngModel)]="selectedLevels" name="fdsa"></p-multiSelect>-->
+                </div>
+                <form class="form-inline my-2 my-lg-0"  style="float: right">
+                <md-select placeholder="Timeline" [(ngModel)]="selectedvalue" (ngModelChange)="selection($event)" name="option">
+                    <md-option *ngFor="let option of options" [value]="option">{{option.value}}</md-option>
+                </md-select>
+                <div *ngIf="selectedvalue && selectedvalue.id===1">
+                    <md2-datepicker name="mon"
+                      placeholder="Select {{selectedvalue.value | lowercase}}"
+                      [(ngModel)]="mon"
+                      [required]="true"
+                      type="month"
+                      startView="month"
+                      format="MMM/y"
+                      #dateControl="ngModel"
+                      (change)="getChart('inscan_vs_booked-transition')"></md2-datepicker>
+                </div>
+                <div *ngIf="selectedvalue && selectedvalue.id===2">
+                    <md2-datepicker name="sDate"
+                      placeholder="Start date"
+                      [(ngModel)]="sDate"
+                      [required]="true"
+                      type="date"
+                      startView="month"
+                      #dateControl="ngModel"
+                      (change)="setMaxDate()"></md2-datepicker>
+                </div>
+                <div *ngIf="selectedvalue && selectedvalue.id===2">
+                    <md2-datepicker name="eDate"
+                      placeholder="End date"
+                      [(ngModel)]="eDate"
+                      [required]="true"
+                      [min]="sDate"
+                      [max]="_maxDate"
+                      type="date"
+                      startView="month"
+                      #dateControl="ngModel"
+                      (change)="getChart('inscan_vs_booked-transition')"></md2-datepicker>
+                </div>
+                    <!--<p-calendar *ngIf="selectedvalue===2" showIcon="true" [(ngModel)]="value" [readonlyInput]="true" name="dataPickup" onSelect="selectedWeek()"></p-calendar>-->
                 <input class="form-control mr-sm-2" type="text" [(ngModel)]="filter['inscan_vs_booked']['inscan_vs_booked-transition']" name="filter1" placeholder="Filter">
             </form>
-                </div>
+                <!--</div>-->
                 <div id="inscan_vs_booked-transition"></div>
             </div>
             <div class="card-footer">
