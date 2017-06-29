@@ -84,8 +84,8 @@ export class ChartsComponent implements OnInit {
     chartInit(kpi_name: string,conf: any): string{
         var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
         var data = eval('(' + conf + ')')
-        var chart = new Highcharts.Chart(data);
         this.kpilist[kpi_name][data.chart.name]=chart;
+        var chart = new Highcharts.Chart(data);
         chart.options.drilldown.activeDataLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         chart.options.drilldown.activeAxisLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         chart.options.drilldown.drillUpButton = {
@@ -126,10 +126,10 @@ export class ChartsComponent implements OnInit {
     }
     getChart(id: string) {
         var df;
-        if(this.mon){
+        if(this.selectedvalue && this.selectedvalue.id===1){
             df = {dftype: this.selectedvalue.id,d1: new Date(this.mon).toLocaleDateString('en-IN').split('/').splice(1).toString()};
         }
-        else if(this.sDate && this.eDate){
+        else if(this.selectedvalue && this.selectedvalue.id===2){
             var d1 = new Date(this.sDate).toLocaleDateString('en-IN');
             var d2 = new Date(this.eDate).toLocaleDateString('en-IN');
             df = {dftype: this.selectedvalue.id,d1: d1,d2: d2};
@@ -207,12 +207,13 @@ export class ChartsComponent implements OnInit {
     drilldowns: Map<string,any> = new Map();
     filter: Map<string,any> = new Map();
 
-    selection(event) {
+    selection(event,chartid: string) {
         if(event.id===0){
             delete this.mon;
             delete this.sDate;
             delete this.eDate;
-        }          
+            this.getChart(chartid);
+        }
     }
     ngOnInit() {
         this.drilldownsAdded = 0;

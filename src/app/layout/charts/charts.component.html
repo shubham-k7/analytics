@@ -9,11 +9,11 @@
             <div class="card-block">
                 <div class="breadcrumb">
                 <li class="breadcrumb-item" *ngFor="let drill of drilldowns['inscan_vs_booked']['inscan_vs_booked-transition']; let last = last">
-                    <i (click)="clickable">{{drill}}</i>    
+                    <i>{{drill}}</i>    
                 </li>
                 </div>
                 <form class="form-inline my-2 my-lg-0"  style="float: right">
-                <md-select placeholder="Timeline" [(ngModel)]="selectedvalue" (ngModelChange)="selection($event)" name="option">
+                <md-select placeholder="Timeline" [(ngModel)]="selectedvalue" (ngModelChange)="selection($event,'inscan_vs_booked-transition')" name="option">
                     <md-option *ngFor="let option of options" [value]="option">{{option.value}}</md-option>
                 </md-select>
                 <div *ngIf="selectedvalue && selectedvalue.id===1">
@@ -23,7 +23,7 @@
                       [required]="true"
                       type="month"
                       startView="month"
-                      format="MMM/y"
+                      format="MMM y"
                       #dateControl="ngModel"
                       (change)="getChart('inscan_vs_booked-transition')"></md2-datepicker>
                 </div>
@@ -34,6 +34,7 @@
                       [required]="true"
                       type="date"
                       startView="month"
+                      format="d MMM yy"
                       #dateControl="ngModel"
                       (change)="setMaxDate()"></md2-datepicker>
                 </div>
@@ -46,11 +47,12 @@
                       [max]="_maxDate"
                       type="date"
                       startView="month"
+                      format="d MMM yy"
                       #dateControl="ngModel"
                       (change)="getChart('inscan_vs_booked-transition')"></md2-datepicker>
                 </div>
                     <!--<p-calendar *ngIf="selectedvalue===2" showIcon="true" [(ngModel)]="value" [readonlyInput]="true" name="dataPickup" onSelect="selectedWeek()"></p-calendar>-->
-                <input class="form-control mr-sm-2" type="text" [(ngModel)]="filter['inscan_vs_booked']['inscan_vs_booked-transition']" name="filter1" placeholder="Filter">
+                    <!--<input class="form-control mr-sm-2" type="text" [(ngModel)]="filter['inscan_vs_booked']['inscan_vs_booked-transition']" name="filter1" placeholder="Filter">-->
             </form>
                 <!--</div>-->
                 <div id="inscan_vs_booked-transition"></div>
