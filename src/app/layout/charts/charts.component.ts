@@ -34,49 +34,59 @@ export class ChartsComponent implements OnInit {
 	}
 	
 	public getChartData(event: any,chartName: string): void {
-			var comp=this,t;
-			var x = chartName.split('-').slice(0,2);
-			var kpi_name = x[0];
-			var abc = x[1];
-			t = this.drilldowns[kpi_name][chartName].length;
-			var list = this.drilldowns[kpi_name][chartName].slice(1,t+1);
-			list.push(event.point.name);
-			// PAYLOAD for charts, name is a list of filters for charts
-			var payload = {name: list,
-						series_name: event.point.series.name,
-						report_type: t.toString(),
-						chartName: chartName,
-						version_ids: [abc],
-						kpi_id: kpi_name};
-			this.chartDataService.getChartData(payload).subscribe(series => {
-				var chart;
-				chart = comp.kpilist[payload.kpi_id][chartName];
-				chart.hideLoading();
-				if(event.points)
-				{
-					chart.addSingleSeriesAsDrilldown(event.point,series[0]);
-					comp.drilldownsAdded++;
-					if(comp.drilldownsAdded===event.points.length) {
-						comp.drilldownsAdded=0;
-						chart.applyDrilldown();
-						if(chart.insertedTable)
-							chart.viewData();
-						comp.drilldowns[payload.kpi_id][chartName].push(payload.name.slice(-1)[0]);
-					}
-					console.log(comp.drilldowns);
+		var comp=this,t;
+		var x = chartName.split('-').slice(0,2);
+		var kpi_name = x[0];
+		var abc = x[1];
+		t = this.kpilist[kpi_name][chartName]._drilldowns.length;
+		var list = this.kpilist[kpi_name][chartName]._drilldowns.slice(1,t+1);
+		list.push(event.point.name);
+		// PAYLOAD for charts, name is a list of filters for charts
+		var payload = {name: list,
+					series_name: event.point.series.name,
+					report_type: t.toString(),
+					chartName: chartName,
+					version_ids: [abc],
+					kpi_id: kpi_name};
+		this.chartDataService.getChartData(payload).subscribe(series => {
+			var chart;
+			chart = comp.kpilist[payload.kpi_id][chartName]._chart;
+			chart.hideLoading();
+			if(event.points)
+			{
+				chart.addSingleSeriesAsDrilldown(event.point,series[0]);
+				comp.drilldownsAdded++;
+				if(comp.drilldownsAdded===event.points.length) {
+					comp.drilldownsAdded=0;
+					chart.applyDrilldown();
+					if(chart.insertedTable)
+						chart.viewData();
+					comp.kpilist[payload.kpi_id][chartName]._drilldowns.push(payload.name.slice(-1)[0]);
 				}
-			},
-			(err) => {
-				alert(err);
-				this.kpilist[payload.kpi_id][payload.chartName].hideLoading();
-		}
-		);
+				console.log(comp.drilldowns);
+			}
+		},
+		(err) => {
+			alert(err);
+			this.kpilist[payload.kpi_id][payload.chartName]._chart.hideLoading();
+		});
 	}
 	chartInit(kpi_name: string,conf: any): string{
 		var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
 		var data = eval('(' + conf + ')')
+		this.kpilist[kpi_name][data.chart.name] = {	_chart:  null,
+													_drilldowns: ['All'],
+													_selectedvalue: null,
+													_maxDate: null,
+													_mon: null,
+													_sDate: null,
+													_eDate: null,
+													_divisions: null,
+													_filteredDivisions: null
+												}
+		console.log(this.kpilist);
 		var chart = new Highcharts.Chart(data);
-		this.kpilist[kpi_name][data.chart.name]=chart;
+		this.kpilist[kpi_name][data.chart.name]._chart = chart;
 		chart.options.drilldown.activeDataLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
 		chart.options.drilldown.activeAxisLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
 		chart.options.drilldown.drillUpButton = {
@@ -111,27 +121,29 @@ export class ChartsComponent implements OnInit {
 	}
 	update(event) {
 		console.log(event);
-		// getChart(event.id.split('-')[2]
 	}
-	setMaxDate() {
-		var temp = new Date(this.sDate);
+	setMaxDate(id: string) {
+		var kpi_name = id.split('-')[0];
+		var temp_date = this.kpilist[kpi_name][id]._sDate;
+		var temp = new Date(temp_date);
 		temp.setDate(temp.getDate() + 31);
-		this._maxDate = temp;
+		this.kpilist[kpi_name][id]._maxDate = temp;
 	}
 	getChart(id: string) {
 		var df;
-		if(this.selectedvalue && this.selectedvalue.id===1){
-			df = {dftype: this.selectedvalue.id,d1: new Date(this.mon).toLocaleDateString('en-IN').split('/').splice(1).toString()};
+		var kpi_name = id.split('-')[0];
+		if(this.kpilist[kpi_name][id]._selectedvalue && this.kpilist[kpi_name][id]._selectedvalue.id===1){
+			df = {dftype: this.kpilist[kpi_name][id]._selectedvalue.id,d1: new Date(this.mon).toLocaleDateString('en-IN').split('/').splice(1).toString()};
 		}
-		else if(this.selectedvalue && this.selectedvalue.id===2){
+		else if(this.kpilist[kpi_name][id]._selectedvalue && this.kpilist[kpi_name][id]._selectedvalue.id===2){
 			var d1 = new Date(this.sDate).toLocaleDateString('en-IN');
 			var d2 = new Date(this.eDate).toLocaleDateString('en-IN');
-			df = {dftype: this.selectedvalue.id,d1: d1,d2: d2};
+			df = {dftype: this.kpilist[kpi_name][id]._selectedvalue.id,d1: d1,d2: d2};
 		}
 		else df = null;
-		var kpi_name = id.split('-')[0]; 
-		var chart = this.kpilist[kpi_name][id]; 
-		chart.showLoading("Fetching Data...")
+		var chartConfigs = this.kpilist[kpi_name][id],
+		chart = chartConfigs._chart;
+		chart.showLoading("Fetching Data...");
 		var check = null;
 		if(chart.insertedTable && chart.insertedTableID)
 			check = chart.insertedTableID;
@@ -139,9 +151,7 @@ export class ChartsComponent implements OnInit {
 			var kpi_name = id.split('-')[0];
 			var series = data[0].data;
 			var chartid = this.chartInit(kpi_name,data[0].conf);
-			this.drilldowns[kpi_name][chartid]=[];
-			this.drilldowns[kpi_name][chartid].push("All");
-			var chart = this.kpilist[kpi_name][chartid];
+			var chart = this.kpilist[kpi_name][chartid]._chart;
 			for(var i =0; i <series.length;i++)
 				chart.addSeries(series[i]);
 			if(check){
@@ -163,16 +173,11 @@ export class ChartsComponent implements OnInit {
 			// for each chart in data, Init chart, add Mappings to chart, add series to chart
 			for(var chart of data){
 				chartid = this.chartInit(kpi.kpi_name,chart.conf);
-				this.drilldowns[kpi.kpi_name][chartid]=[];
-				this.drilldowns[kpi.kpi_name][chartid].push("All");
-				this.filter[kpi.kpi_name][chartid] = '';
-				// this.mon.push(null);
 				for(var i =0; i<chart.data.length;i++){
-					this.kpilist[kpi.kpi_name][chartid].addSeries(chart.data[i]);
+					this.kpilist[kpi.kpi_name][chartid]._chart.addSeries(chart.data[i]);
 				}
 			}
 			// console.log(this.kpilist);
-			// console.log(this.drilldowns);
 		},
 		(err) => {
 			alert(err);
@@ -186,24 +191,19 @@ export class ChartsComponent implements OnInit {
 			console.log(kpis);
 			// for each kpi, create kpilist map, getCharts for each KPI. filter charts on kpi.version(Chartlists)
 			for(var kpi of kpis){
-				name=kpi.kpi_name;
 				this.getCharts(kpi);
 				this.kpilist[kpi.kpi_name] = new Map<string,any>();
-				this.drilldowns[kpi.kpi_name] = new Map<string,string[]>();
-				this.filter[kpi.kpi_name] = new Map<string,string>();
 		   }
 		},
 		(err)=>{
 			alert(err);
 		});
 	}
-	selectedvalue: any;
 	options = [
 		{id: 0, value: 'Default'},
 		{id: 1, value: 'Month'},
 		{id: 2, value: 'Range'}
 	];
-	picker: null;
 	mon: Date;
 	kpis: any;
 	_maxDate: Date;
@@ -213,6 +213,7 @@ export class ChartsComponent implements OnInit {
 	kpilist: Map<string,any> = new Map();
 	drilldowns: Map<string,any> = new Map();
 	filter: Map<string,any> = new Map();
+	selectedvalue: Map<string,any> = new Map();
 
 	filterDivisions(event) {
 		let query = event.query;
@@ -241,9 +242,11 @@ export class ChartsComponent implements OnInit {
 				 {name: "GUW", type: "DC"}]
 	selection(event,chartid: string) {
 		if(event.id===0){
-			delete this.mon;
-			delete this.sDate;
-			delete this.eDate;
+			var kpi_name = chartid.split('-')[0];
+			this.kpilist[kpi_name][chartid]._mon = null;
+			this.kpilist[kpi_name][chartid]._sDate = null;
+			this.kpilist[kpi_name][chartid]._eDate = null;
+			this.kpilist[kpi_name][chartid]._maxDate = null;
 			this.getChart(chartid);
 		}
 	}
