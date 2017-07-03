@@ -24,7 +24,7 @@ export function highchartsFactory() {
     return hc;
 }
 // -----Provider Imports-----
-import { ChartDataService } from '../../shared/services/chart-data.service';
+import { ChartDataService } from './chart-data.service';
 import { ChartFilterService } from './chart-filter.service';
 // -----Applet Imports-----
 import {AutoCompleteModule} from 'primeng/components/autocomplete/autocomplete';
