@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartComponent } from 'angular2-highcharts';
 import { Observable } from 'rxjs/Rx';
-import { MenuItem } from 'primeng/components/common/api';
-import { Message } from 'primeng/components/common/api';
+// -----Providers-----
 import { ChartDataService } from '../../shared/services/chart-data.service';
-import { SelectItem } from 'primeng/primeng';
-import { DateAdapter } from '@angular/material';
+import { ChartFilterService } from './chart-filter.service';
+// -----Highcharts Imports-----
 declare var require: any;
+import { ChartComponent } from 'angular2-highcharts';
 var Highcharts = require('highcharts/highcharts');
 var HighchartsMore = require('highcharts/highcharts-more');
 var HighchartsDrilldown = require('highcharts/modules/drilldown');
 var HighchartsExporting = require('highcharts/modules/exporting.src');
 var HighchartsExportData = require('highcharts/modules/export-data.src');
-import { DateLocale } from 'md2';
-import { Month } from '../../../assets/i18n/month';
 HighchartsMore(Highcharts);
 HighchartsDrilldown(Highcharts);
 HighchartsExporting(Highcharts);
 HighchartsExportData(Highcharts);
+// -----MaterialDesign Imports-----
+import { DateAdapter } from '@angular/material';
+import { DateLocale } from 'md2';
+import { Month } from '../../../assets/i18n/month';
 
 @Component({
     selector: 'app-charts',
@@ -25,13 +26,30 @@ HighchartsExportData(Highcharts);
     styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent implements OnInit {
-    
-    
+ 
     constructor(private chartDataService: ChartDataService, 
-    private myDate: DateLocale){
+    private myDate: DateLocale,
+    private chartFilterService: ChartFilterService){
         this.myDate.months = Month;
     }
 
+    filterDivisions(event) {
+        let query = event.query;
+        console.log(query);
+        let filtered : any[] = [];
+        this.chartFilterService.getFilteredResults(query).subscribe(filtered => {
+            this.filteredDivisions = filtered;
+        },
+        (err) => {
+            alert(err);
+        });
+    }
+    filteredDivisions: any;
+    division = [{name: "India", type: "Country"},
+                 {name: "East", type: "Zone"},
+                 {name: "Assam", type: "State"},
+                 {name: "Guwahati", type: "City"},
+                 {name: "GUW", type: "DC"}]
     public getChartData(event: any,chartName: string): void {
             var comp=this,t;
             var x = chartName.split('-').slice(0,2);
@@ -62,6 +80,7 @@ export class ChartsComponent implements OnInit {
                             chart.viewData();
                         comp.drilldowns[payload.kpi_id][chartName].push(payload.name.slice(-1)[0]);
                     }
+                    console.log(comp.drilldowns);
                 }
             },
             (err) => {
@@ -70,22 +89,11 @@ export class ChartsComponent implements OnInit {
         }
         );
     }
-    selectedvalue: any;
-    options = [
-        {id: 0, value: 'Default'},
-        {id: 1, value: 'Month'},
-        {id: 2, value: 'Range'}
-    ];
-    picker: null;
-    mon: Date;
-    update(event) { 
-        console.log(event);
-    }
     chartInit(kpi_name: string,conf: any): string{
         var comp = this;        // Do NOT REMOVE this. It's used inside chart confs
         var data = eval('(' + conf + ')')
-        this.kpilist[kpi_name][data.chart.name]=chart;
         var chart = new Highcharts.Chart(data);
+        this.kpilist[kpi_name][data.chart.name]=chart;
         chart.options.drilldown.activeDataLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         chart.options.drilldown.activeAxisLabelStyle = { "cursor": "pointer", "color": "#003399", "fontWeight": "bold", "textDecoration": "!none","text-transform": "uppercase" };
         chart.options.drilldown.drillUpButton = {
@@ -105,8 +113,8 @@ export class ChartsComponent implements OnInit {
                         hover: {
                             fill: '#41739D',
                             style: {
-							    color: "white"
-						    },
+                                color: "white"
+                            },
                             opacity: 1
                         },
                         select: {
@@ -118,7 +126,10 @@ export class ChartsComponent implements OnInit {
             };
         return data.chart.name;
     }
-    _maxDate: Date;
+    update(event) {
+        console.log(event);
+        // getChart(event.id.split('-')[2]
+    }
     setMaxDate() {
         var temp = new Date(this.sDate);
         temp.setDate(temp.getDate() + 31);
@@ -141,14 +152,13 @@ export class ChartsComponent implements OnInit {
         var check = null;
         if(chart.insertedTable && chart.insertedTableID)
             check = chart.insertedTableID;
-        // chart.hideData();
         this.chartDataService.getChart(id,df).subscribe(data => {
             var kpi_name = id.split('-')[0];
             var series = data[0].data;
             var chartid = this.chartInit(kpi_name,data[0].conf);
             this.drilldowns[kpi_name][chartid]=[];
             this.drilldowns[kpi_name][chartid].push("All");
-            var chart= this.kpilist[kpi_name][id];
+            var chart = this.kpilist[kpi_name][chartid];
             for(var i =0; i <series.length;i++)
                 chart.addSeries(series[i]);
             if(check){
@@ -163,6 +173,7 @@ export class ChartsComponent implements OnInit {
         }
         );
     }
+    
     getCharts(kpi: any) {
         this.chartDataService.getCharts(kpi).subscribe(data => {
             var chartid;
@@ -172,6 +183,7 @@ export class ChartsComponent implements OnInit {
                 this.drilldowns[kpi.kpi_name][chartid]=[];
                 this.drilldowns[kpi.kpi_name][chartid].push("All");
                 this.filter[kpi.kpi_name][chartid] = '';
+                // this.mon.push(null);
                 for(var i =0; i<chart.data.length;i++){
                     this.kpilist[kpi.kpi_name][chartid].addSeries(chart.data[i]);
                 }
@@ -187,6 +199,8 @@ export class ChartsComponent implements OnInit {
     getKPIs() {
         this.chartDataService.getKPIs().subscribe(res => {
             var kpis = res['data'],name;
+            this.kpis = kpis;
+            console.log(kpis);
             // for each kpi, create kpilist map, getCharts for each KPI. filter charts on kpi.version(Chartlists)
             for(var kpi of kpis){
                 name=kpi.kpi_name;
@@ -200,6 +214,16 @@ export class ChartsComponent implements OnInit {
             alert(err);
         });
     }
+    selectedvalue: any;
+    options = [
+        {id: 0, value: 'Default'},
+        {id: 1, value: 'Month'},
+        {id: 2, value: 'Range'}
+    ];
+    picker: null;
+    mon: Date;
+    kpis: any;
+    _maxDate: Date;
     sDate: Date;
     eDate: Date;
     drilldownsAdded = 0;

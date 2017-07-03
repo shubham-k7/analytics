@@ -7,7 +7,6 @@ import 'rxjs/add/operator/catch';
  
 @Injectable()
 export class ChartDataService {
-    public chartData: any;
     constructor(private http: Http){   }
     
     private extractData(res: Response) {
