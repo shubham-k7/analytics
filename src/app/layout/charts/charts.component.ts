@@ -156,6 +156,7 @@ export class ChartsComponent implements OnInit {
 		},
 		(err) => {
 			alert(err);
+			chartConfigs._chart.hideLoading();
 		}
 		);
 	}

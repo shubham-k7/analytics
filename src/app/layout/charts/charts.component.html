@@ -2,9 +2,7 @@
 <div *ngFor="let kpi of kpis">
     <h4>KPI: {{kpi.kpi_name}}</h4>
     <div *ngFor="let chart of kpi.versions; let i = index;">
-        <!-- {{(i%2===1)?'row':'null'}} -->
-        <!-- <div ngClass="(i%2===0)?'row':null"> -->
-        <div class="col col-sm-6">
+        <div class="col col-sm-6" [style.float]="(i%2===0)?'left':'right'">
             <div class="card mb-3">
                 <div class="card-header">
                     Chart type: {{chart}}
