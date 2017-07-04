@@ -2,10 +2,10 @@
 <div *ngFor="let kpi of kpis">
     <h4>KPI: {{kpi.kpi_name}}</h4>
     <div *ngFor="let chart of kpi.versions; let i = index;">
-        <div class="col col-sm-6" [style.float]="(i%2===0)?'left':'right'">
+        <div class="col col-sm-6" [style.float]="(i%2==0)?'left':'right'">
             <div class="card mb-3">
                 <div class="card-header">
-                    Chart type: {{chart}}
+                    Chart type: Booked vs Connection (DC Level)
                 </div>
                 <div class="card-block">
                     <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]">
@@ -20,20 +20,20 @@
                             </md-select>
                             <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===1">
                                 <md2-datepicker name="mon"
-                                placeholder="Select {{kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.value | lowercase}}"
+                                placeholder="{{kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.value | lowercase}}"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._mon"
                                 [required]="true"
                                 type="month"
                                 startView="month"
                                 format="MMM y"
-                                touchUi = true
+                                touchUi = false
                                 #monthControl="ngModel"
                                 (change)="update($event,kpi.kpi_name+'-'+chart)"
                                 ></md2-datepicker>
                             </div>
-                            <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===2">
+                            <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===2" []>
                                 <md2-datepicker name="sDate"
-                                placeholder="Start date"
+                                placeholder="Start"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._sDate"
                                 [required]="true"
                                 type="date"
@@ -45,7 +45,7 @@
                             </div>
                             <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===2">
                                 <md2-datepicker name="eDate"
-                                placeholder="End date"
+                                placeholder="End"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._eDate"
                                 [required]="true"
                                 [min]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._sDate"

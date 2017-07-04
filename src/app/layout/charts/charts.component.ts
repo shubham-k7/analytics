@@ -168,6 +168,7 @@ export class ChartsComponent implements OnInit {
 			// for each chart in data, Init chart, add Mapping to chart, add series to chart
 			for(var chart of data){
 				var chartid = this.chartInit(kpi.kpi_name,chart.conf);
+				console.log(chart.data[0]);
 				for(var i =0; i<chart.data.length;i++){
 					this.kpilist[kpi.kpi_name][chartid]._chart.addSeries(chart.data[i]);
 				}
