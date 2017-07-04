@@ -40,7 +40,10 @@
 			},
 			drillupall: function(e) {
 				this.hideData();
-				comp.drilldowns[this.options.chart.name.split('-')[0]][this.options.chart.name].pop();
+				let temp = this.options.chart.name.split('-'),
+					kpi_name = temp[0],
+					chartid = temp[1];
+				comp.kpilist[kpi_name][this.options.chart.name]._drilldowns.pop();
 			}
 		}
 	},

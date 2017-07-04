@@ -4,7 +4,7 @@
     <div *ngFor="let chart of kpi.versions; let i = index;">
         <!-- {{(i%2===1)?'row':'null'}} -->
         <!-- <div ngClass="(i%2===0)?'row':null"> -->
-        <div class="col col-sm-12">
+        <div class="col col-sm-6">
             <div class="card mb-3">
                 <div class="card-header">
                     Chart type: {{chart}}
@@ -25,19 +25,16 @@
                                 placeholder="Select {{kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.value | lowercase}}"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._mon"
                                 [required]="true"
-                                id='{{chart}}'
                                 type="month"
                                 startView="month"
                                 format="MMM y"
                                 touchUi = true
                                 #monthControl="ngModel"
-                                [id]="1"
-                                (change)="update($event)"
+                                (change)="update($event,kpi.kpi_name+'-'+chart)"
                                 ></md2-datepicker>
                             </div>
                             <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===2">
                                 <md2-datepicker name="sDate"
-                                id='{{chart}}'
                                 placeholder="Start date"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._sDate"
                                 [required]="true"
@@ -46,11 +43,10 @@
                                 format="d MMMM yy"
                                 touchUi = true
                                 #sdateControl="ngModel"
-                                (change)="setMaxDate(kpi.kpi_name+'-'+chart)"></md2-datepicker>
+                                (change)="setMaxDate($event,kpi.kpi_name+'-'+chart)"></md2-datepicker>
                             </div>
                             <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue && kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._selectedvalue.id===2">
                                 <md2-datepicker name="eDate"
-                                id='{{chart}}'
                                 placeholder="End date"
                                 [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._eDate"
                                 [required]="true"
@@ -61,9 +57,9 @@
                                 startView="month"
                                 format="d MMMM yy"
                                 #edateControl="ngModel"
-                                (change)="getChart(kpi.kpi_name+'-'+chart)"></md2-datepicker>
+                                (change)="update($event,kpi.kpi_name+'-'+chart)"></md2-datepicker>
                             </div>
-                            <p-autoComplete [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._divisions" [suggestions]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._filteredDivisions" (completeMethod)="filterDivisions($event)" styleClass="wid100" [minLength]="1" placeholder="Filter" [multiple]="true" field="name" name="divisions">
+                            <p-autoComplete [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._divisions" [suggestions]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._filteredDivisions" (completeMethod)="filterDivisions($event,kpi.kpi_name+'-'+chart)" styleClass="wid100" [minLength]="1" placeholder="Filter" [multiple]="true" field="name" name="divisions" (onSelect)="check($event)">
                             <ng-template let-brand pTemplate="item">
                                 <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
                                     <div style="font-size:18px;float:left;margin:10px 10px 0 0">{{brand.name}}</div>
