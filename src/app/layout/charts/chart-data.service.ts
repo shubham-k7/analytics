@@ -26,6 +26,7 @@ export class ChartDataService {
         console.error(errMsg);
         return Observable.throw(errMsg);
     }
+
     getKPIs(): Observable<any> {
         var url = 'http://52.70.207.115:8087/api/v1/kpi/';
         let headers = new Headers({'content-type': 'application/json'});
@@ -56,12 +57,12 @@ export class ChartDataService {
         return this.http.post(url,payload,options).map(this.extractData).catch(this.handleError);
     }
 
-    getChartData(temp: any): Observable<any> {
+    getChartData(payload: any): Observable<any> {
         var url = 'http://52.70.207.115:8087/api/v1/inscan/report/';
         let headers = new Headers({'content-type': 'application/json'});
         headers.append('Authorization', 'Token 6a408c2bc8db8c8dc151a6390ab631f3c1931f6f');
         let options = new RequestOptions({ headers: headers});
-        return this.http.post(url, JSON.stringify(temp),options).map(this.extractData).catch(this.handleError);
+        return this.http.post(url, JSON.stringify(payload),options).map(this.extractData).catch(this.handleError);
     }
 
 }

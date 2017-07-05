@@ -5,7 +5,7 @@
         <div class="col col-sm-6" [style.float]="(i%2==0)?'left':'right'">
             <div class="card mb-3">
                 <div class="card-header">
-                    Chart type: Booked vs Connection (DC Level)
+                    Chart type: {{chart}}
                 </div>
                 <div class="card-block">
                     <div *ngIf="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]">
@@ -57,7 +57,7 @@
                                 #edateControl="ngModel"
                                 (change)="update($event,kpi.kpi_name+'-'+chart)"></md2-datepicker>
                             </div>
-                            <p-autoComplete [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._divisions" [suggestions]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._filteredDivisions" (completeMethod)="filterDivisions($event,kpi.kpi_name+'-'+chart)" styleClass="wid100" [minLength]="1" placeholder="Filter" [multiple]="true" field="name" name="divisions" (onSelect)="check($event)">
+                            <p-autoComplete [(ngModel)]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._divisions" [suggestions]="kpilist[kpi.kpi_name][kpi.kpi_name+'-'+chart]._filteredDivisions" (completeMethod)="filterDivisions($event,kpi.kpi_name,chart)" styleClass="wid100" [minLength]="1" placeholder="Filter" [multiple]="true" field="name" name="divisions" (onSelect)="check($event)">
                             <ng-template let-brand pTemplate="item">
                                 <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
                                     <div style="font-size:18px;float:left;margin:10px 10px 0 0">{{brand.name}}</div>
@@ -73,7 +73,7 @@
                     <div id="{{kpi.kpi_name+'-'+chart}}"></div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-info btn-sm" (click)="getChart(kpi.kpi_name+'-'+chart)">Refresh</button>
+                    <button class="btn btn-info btn-sm" (click)="getChart(kpi.kpi_name+'-'+chart,'')">Refresh</button>
                 </div>
             </div>
         </div>
