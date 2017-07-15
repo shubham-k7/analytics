@@ -266,15 +266,15 @@ export class ChartsComponent implements OnInit {
 				 {name: "GUW", type: "DC"}]
 	selection(event,chartid: string) {
 		let kpi_name = chartid.split('-')[0];
-		switch(event.id)
+		if(!event){
+			this.kpilist[kpi_name][chartid]._mon = null;
+			this.kpilist[kpi_name][chartid]._eDate = null;
+			this.kpilist[kpi_name][chartid]._sDate = null;
+			this.kpilist[kpi_name][chartid]._maxDate = null;
+			this.getChart(chartid,"Selection");
+		}
+		switch((event && event.id))
 		{
-			case 0: 
-				this.kpilist[kpi_name][chartid]._mon = null;
-				this.kpilist[kpi_name][chartid]._sDate = null;
-				this.kpilist[kpi_name][chartid]._eDate = null;
-				this.kpilist[kpi_name][chartid]._maxDate = null;
-				break;
-			// this.getChart(chartid);
 			case 1:
 				this.kpilist[kpi_name][chartid]._sDate = null;
 				this.kpilist[kpi_name][chartid]._eDate = null;
@@ -289,24 +289,29 @@ export class ChartsComponent implements OnInit {
 		console.log(event);
 		this.getChart(chartid,"datepicker");
 	}
+	setGlobalMaxDate() {
+		this.MAX_DATE = new Date();
+	}
 	setMaxDate(id: string) {
 		var kpi_name = id.split('-')[0];
 		var temp_date = this.kpilist[kpi_name][id]._sDate;
+		var temp2 = new Date();
 		var temp = new Date(temp_date);
 		temp.setDate(temp.getDate() + 31);
-		this.kpilist[kpi_name][id]._maxDate = temp;
+		this.kpilist[kpi_name][id]._maxDate = (temp>temp2)?temp2:temp;
 	}
 	// getPayload(chartid)
 	options = [
-		{id: 0, value: 'Default'},
 		{id: 1, value: 'Month'},
 		{id: 2, value: 'Range'}
 	];
 	kpis: any;
+	MAX_DATE: new Date();
 	drilldownsAdded = 0;
 	kpilist: Map<string,any> = new Map();
 	ngOnInit() {
 		this.drilldownsAdded = 0;
+		this.MAX_DATE = new Date();
 		this.getKPIs();
 	}
 }
